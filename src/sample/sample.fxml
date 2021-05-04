@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="1048.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <TabPane prefHeight="489.0" prefWidth="1048.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Работа с клиентами">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                        <children>
+                            <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о клиентах" />
+                            <Label layoutX="754.0" layoutY="55.0" text="Серия паспорта" />
+                            <Label layoutX="754.0" layoutY="86.0" prefHeight="17.0" prefWidth="96.0" text="Номер паспорта" />
+                            <Label layoutX="754.0" layoutY="117.0" text="Имя" />
+                            <Label layoutX="753.0" layoutY="148.0" text="Фамилия" />
+                            <Label layoutX="753.0" layoutY="179.0" text="Отчество" />
+                            <Label layoutX="753.0" layoutY="209.0" text="Дата рождения" />
+                            <Label layoutX="752.0" layoutY="240.0" text="Номер телефона" />
+                            <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Зарегистрировать клиента" />
+                            <Button layoutX="755.0" layoutY="390.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Перейти к проживаниям" />
+                            <Button layoutX="900.0" layoutY="390.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Перейти к броням" />
+                            <TextField layoutX="885.0" layoutY="51.0" />
+                            <TextField layoutX="885.0" layoutY="82.0" />
+                            <TextField layoutX="885.0" layoutY="113.0" />
+                            <TextField layoutX="885.0" layoutY="144.0" />
+                            <TextField layoutX="885.0" layoutY="175.0" />
+                            <TextField layoutX="885.0" layoutY="205.0" />
+                            <TextField layoutX="885.0" layoutY="236.0" />
+                            <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Удалить выбранного клиента" />
+                            <Button layoutX="217.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" />
+                        </children>
+                    </AnchorPane>
+                </content>
+            </Tab>
+            <Tab text="Работа с проживаниями">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о проживаниях" />
+                        <Label layoutX="755.0" layoutY="55.0" text="Количество гостей" />
+                        <Label layoutX="755.0" layoutY="86.0" text="Количество детей" />
+                        <TextField layoutX="885.0" layoutY="51.0" />
+                        <TextField layoutX="885.0" layoutY="82.0" />
+                        <Button layoutX="755.0" layoutY="117.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Посмотреть информацию о дополнительных услугах" />
+                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" />
+                        <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="216.0" text="Удалить выбранное проживание" />
+                        <Button layoutX="236.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="261.0" text="Удалить данные выбранного проживания" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Работа с бронированиями">
+                <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о бронях" />
+                        <Label layoutX="755.0" layoutY="53.0" text="Количество гостей" />
+                        <Label layoutX="755.0" layoutY="84.0" text="Количество детей" />
+                        <TextField layoutX="885.0" layoutY="49.0" />
+                        <TextField layoutX="885.0" layoutY="80.0" />
+                        <Button layoutX="755.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" />
+                        <Button layoutX="14.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="189.0" text="Удалить выбранную бронь" />
+                        <Button layoutX="209.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="216.0" text="Удалить данные выбранной брони" />
+                        <Label layoutX="755.0" layoutY="114.0" prefWidth="459.0" text="Вставить данные выбранного бронирования" />
+                        <Label layoutX="755.0" layoutY="131.0" text="при следующей регистрации клиента" />
+                        <CheckBox layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" />
+                     </children></AnchorPane>
+              </content>
+            </Tab>
+          <Tab text="Работа с номерами">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о номерах" />
+                        <TextField layoutX="895.0" layoutY="49.0" prefHeight="25.0" prefWidth="139.0" />
+                        <Label layoutX="755.0" layoutY="53.0" text="Числовое обозначение" />
+                        <Label layoutX="755.0" layoutY="84.0" text="Тип номера" />
+                        <ComboBox layoutX="895.0" layoutY="80.0" prefHeight="25.0" prefWidth="139.0" />
+                        <TextField layoutX="895.0" layoutY="112.0" prefHeight="25.0" prefWidth="139.0" />
+                        <Label layoutX="755.0" layoutY="116.0" text="Цена за человека" />
+                        <Label layoutX="755.0" layoutY="163.0" text="Скидка за ребёнка: " />
+                        <Label layoutX="881.0" layoutY="163.0" text="\%value%" />
+                        <Button layoutX="755.0" layoutY="187.0" mnemonicParsing="false" text="Заменить на" />
+                        <TextField layoutX="847.0" layoutY="187.0" prefHeight="25.0" prefWidth="27.0" />
+                        <Label layoutX="882.0" layoutY="191.0" text="\%" />
+                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Добавить новый номер" />
+                        <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Удалить выбранный номер" />
+                        <Button layoutX="191.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="243.0" text="Изменить данные о выбранном номере" />
+                        <Button layoutX="440.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
