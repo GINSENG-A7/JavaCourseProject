@@ -6,14 +6,22 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 1048, 489));
-        primaryStage.show();
+    public void start(Stage primaryStage){
+        try
+        {
+            Parent root = FXMLLoader.load(getClass().getResource("Views/sample.fxml"));
+            primaryStage.setTitle("Hello World");
+            primaryStage.setScene(new Scene(root, 1048, 489));
+            primaryStage.show();
+        }
+        catch (IOException e) {
+            e.getMessage();
+        }
     }
 
 

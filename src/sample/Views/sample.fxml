@@ -6,10 +6,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="1048.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="1048.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
    <children>
       <TabPane prefHeight="489.0" prefWidth="1048.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -37,6 +39,15 @@
                             <TextField layoutX="885.0" layoutY="236.0" />
                             <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Удалить выбранного клиента" />
                             <Button layoutX="217.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" />
+                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="C1" />
+                            <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
                         </children>
                     </AnchorPane>
                 </content>
@@ -54,6 +65,15 @@
                         <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" />
                         <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="216.0" text="Удалить выбранное проживание" />
                         <Button layoutX="236.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="261.0" text="Удалить данные выбранного проживания" />
+                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
                      </children></AnchorPane>
             </content>
           </Tab>
@@ -72,6 +92,15 @@
                         <Label layoutX="755.0" layoutY="114.0" prefWidth="459.0" text="Вставить данные выбранного бронирования" />
                         <Label layoutX="755.0" layoutY="131.0" text="при следующей регистрации клиента" />
                         <CheckBox layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" />
+                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
                      </children></AnchorPane>
               </content>
             </Tab>
@@ -95,6 +124,15 @@
                         <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Удалить выбранный номер" />
                         <Button layoutX="191.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="243.0" text="Изменить данные о выбранном номере" />
                         <Button layoutX="440.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" />
+                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
                      </children></AnchorPane>
             </content>
           </Tab>
