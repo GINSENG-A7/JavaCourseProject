@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="489.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.ViewingApartmentsPhotosController">
+   <children>
+      <Button layoutX="14.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Предыдушая" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+      <Button layoutX="215.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="215.0" />
+      <Button layoutX="415.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Добавить" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="211.0" />
+      <Button layoutX="614.0" layoutY="450.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="190.0" text="Следущая" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="12.0" />
+      <ImageView fitHeight="428.0" fitWidth="789.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="14.0" />
+   </children>
+</AnchorPane>
