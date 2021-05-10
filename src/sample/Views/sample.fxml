@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -15,11 +16,11 @@
    <children>
       <TabPane prefHeight="489.0" prefWidth="1048.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
-            <Tab text="Работа с клиентами">
+            <Tab fx:id="clientsTab" text="Работа с клиентами">
                 <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                         <children>
-                            <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о клиентах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                            <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" onAction="#OnSelectAllClients" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о клиентах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
                             <Label layoutX="754.0" layoutY="55.0" text="Серия паспорта" AnchorPane.rightAnchor="206.0" AnchorPane.topAnchor="55.0" />
                             <Label layoutX="754.0" layoutY="86.0" prefHeight="17.0" prefWidth="96.0" text="Номер паспорта" AnchorPane.rightAnchor="198.0" AnchorPane.topAnchor="86.0" />
                             <Label layoutX="754.0" layoutY="117.0" text="Имя" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="117.0" />
@@ -27,54 +28,60 @@
                             <Label layoutX="753.0" layoutY="179.0" text="Отчество" AnchorPane.rightAnchor="244.0" AnchorPane.topAnchor="179.0" />
                             <Label layoutX="754.0" layoutY="209.0" text="Дата рождения" AnchorPane.rightAnchor="209.0" AnchorPane.topAnchor="209.0" />
                             <Label layoutX="753.0" layoutY="240.0" text="Номер телефона" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="240.0" />
-                            <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Зарегистрировать клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                            <Button layoutX="755.0" layoutY="390.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Перейти к проживаниям" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="158.0" />
-                            <Button layoutX="900.0" layoutY="390.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="134.0" text="Перейти к броням" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="14.0" />
-                            <TextField layoutX="885.0" layoutY="51.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="51.0" />
-                            <TextField layoutX="885.0" layoutY="82.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0" />
-                            <TextField layoutX="885.0" layoutY="113.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="113.0" />
-                            <TextField layoutX="885.0" layoutY="144.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="144.0" />
-                            <TextField layoutX="885.0" layoutY="175.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="175.0" />
-                            <TextField layoutX="885.0" layoutY="205.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="205.0" />
-                            <TextField layoutX="885.0" layoutY="236.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="236.0" />
-                            <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="197.0" text="Удалить выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
-                            <Button layoutX="218.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="218.0" />
-                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                            <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnRegisterNewClient" prefHeight="24.0" prefWidth="279.0" text="Зарегистрировать клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                            <Button layoutX="755.0" layoutY="390.0" mnemonicParsing="false" onAction="#OnMoveToLivings" prefHeight="25.0" prefWidth="155.0" text="Перейти к проживаниям" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="138.0" />
+                            <Button layoutX="900.0" layoutY="390.0" mnemonicParsing="false" onAction="#OnMoveToBookings" prefHeight="25.0" prefWidth="118.0" text="Перейти к броням" AnchorPane.bottomAnchor="45.0" AnchorPane.rightAnchor="14.0" />
+                            <TextField fx:id="clientPassportSeriesTF" layoutX="885.0" layoutY="51.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="51.0" />
+                            <TextField fx:id="clientPassportNumberTF" layoutX="885.0" layoutY="82.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0" />
+                            <TextField fx:id="clientNameTF" layoutX="885.0" layoutY="113.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="113.0" />
+                            <TextField fx:id="clientSurnameTF" layoutX="885.0" layoutY="144.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="144.0" />
+                            <TextField fx:id="clientPatronymicTF" layoutX="885.0" layoutY="175.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="175.0" />
+                            <TextField fx:id="clientTelephoneTF" layoutX="885.0" layoutY="236.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="236.0" />
+                            <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteClientData" prefHeight="25.0" prefWidth="197.0" text="Удалить выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
+                            <Button layoutX="218.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeClientData" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="218.0" />
+                        <TableView fx:id="clientsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                           <columns>
-                            <TableColumn prefWidth="75.0" text="id" />
-                            <TableColumn prefWidth="75.0" text="Серия паспорта" />
-                              <TableColumn prefWidth="75.0" text="Номер паспорта" />
-                              <TableColumn prefWidth="75.0" text="Имя" />
-                              <TableColumn prefWidth="75.0" text="Фамилия" />
-                              <TableColumn prefWidth="75.0" text="Отчество" />
-                              <TableColumn prefWidth="75.0" text="Дата рождения" />
-                              <TableColumn prefWidth="75.0" text="Телефон" />
+                            <TableColumn fx:id="clientIdColumn" prefWidth="75.0" text="id" />
+                            <TableColumn fx:id="clientPassportSeriesColumn" prefWidth="75.0" text="Серия паспорта" />
+                              <TableColumn fx:id="clientPassportNumberColumn" prefWidth="75.0" text="Номер паспорта" />
+                              <TableColumn fx:id="clientNameColumn" prefWidth="75.0" text="Имя" />
+                              <TableColumn fx:id="clientSurnameColumn" prefWidth="75.0" text="Фамилия" />
+                              <TableColumn fx:id="clientPatronymicColumn" prefWidth="75.0" text="Отчество" />
+                              <TableColumn fx:id="clientBirthdayColumn" prefWidth="75.0" text="Дата рождения" />
+                              <TableColumn fx:id="clientTelephoneColumn" prefWidth="75.0" text="Телефон" />
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
+                        <DatePicker fx:id="clientBirthdayDP" layoutX="885.0" layoutY="205.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="205.0" />
                         </children>
                     </AnchorPane>
                 </content>
             </Tab>
-            <Tab text="Работа с проживаниями">
+            <Tab fx:id="livingsTab" text="Работа с проживаниями">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о проживаниях" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" onAction="#OnSelectAllLivings" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о проживаниях" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
                         <Label layoutX="755.0" layoutY="55.0" text="Количество гостей" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="55.0" />
                         <Label layoutX="755.0" layoutY="86.0" text="Количество детей" AnchorPane.rightAnchor="194.0" AnchorPane.topAnchor="86.0" />
-                        <TextField layoutX="885.0" layoutY="51.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="51.0" />
-                        <TextField layoutX="885.0" layoutY="82.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0" />
-                        <Button layoutX="755.0" layoutY="117.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Посмотреть информацию о дополнительных услугах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="117.0" />
-                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                        <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="216.0" text="Удалить выбранное проживание" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
-                        <Button layoutX="237.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="261.0" text="Удалить данные выбранного проживания" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="237.0" />
-                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <TextField fx:id="livingsValueOfGuestsTF" layoutX="885.0" layoutY="51.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="51.0" />
+                        <TextField fx:id="livingsValueOfKidsTF" layoutX="885.0" layoutY="82.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="82.0" />
+                        <Button layoutX="755.0" layoutY="117.0" mnemonicParsing="false" onAction="#OnShowAdditionalServices" prefHeight="25.0" prefWidth="279.0" text="Посмотреть информацию о дополнительных услугах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="117.0" />
+                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnMoveToClientByLiving" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                        <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteLivingData" prefHeight="25.0" prefWidth="216.0" text="Удалить выбранное проживание" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
+                        <Button layoutX="237.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeLivingData" prefHeight="25.0" prefWidth="261.0" text="Изменить данные выбранного проживания" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="237.0" />
+                        <TableView fx:id="livingsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="livingIdColumn" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="livingSettlingColumn" prefWidth="75.0" text="Дата заезда" />
+                              <TableColumn fx:id="livingEvictionColumn" prefWidth="75.0" text="Дата выезда" />
+                              <TableColumn fx:id="livingGuestsValueColumn" prefWidth="75.0" text="Количество взрослых" />
+                              <TableColumn fx:id="livingKidsValueColumn" prefWidth="75.0" text="Количество детей" />
+                              <TableColumn fx:id="livingApartmentIdColumn" prefWidth="75.0" text="apartment_id" />
+                              <TableColumn fx:id="livingClientIdColumn" prefWidth="75.0" text="client_id" />
+                              <TableColumn fx:id="livingASIdColumn" prefWidth="75.0" text="as_id" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -83,25 +90,30 @@
                      </children></AnchorPane>
             </content>
           </Tab>
-            <Tab text="Работа с бронированиями">
+            <Tab fx:id="bookingsTab" text="Работа с бронированиями">
                 <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о бронях" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" onAction="#OnSelectAllBookings" prefHeight="25.0" prefWidth="279.0" text="Вывести информацию о бронях" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
                         <Label layoutX="755.0" layoutY="53.0" text="Количество гостей" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="53.0" />
                         <Label layoutX="756.0" layoutY="84.0" text="Количество детей" AnchorPane.rightAnchor="193.0" AnchorPane.topAnchor="84.0" />
-                        <TextField layoutX="885.0" layoutY="49.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="49.0" />
-                        <TextField layoutX="885.0" layoutY="80.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0" />
-                        <Button layoutX="755.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="14.0" />
-                        <Button layoutX="15.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="189.0" text="Удалить выбранную бронь" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="15.0" />
-                        <Button layoutX="210.0" layoutY="419.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="216.0" text="Удалить данные выбранной брони" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="210.0" />
+                        <TextField fx:id="bookingsValueOfGuestsTF" layoutX="885.0" layoutY="49.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="49.0" />
+                        <TextField fx:id="bookingsValueOfKidsTF" layoutX="885.0" layoutY="80.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0" />
+                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnMoveToClientByBooking" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                        <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteBookingData" prefHeight="25.0" prefWidth="189.0" text="Удалить выбранную бронь" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
+                        <Button layoutX="210.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeBookingData" prefHeight="25.0" prefWidth="216.0" text="Удалить данные выбранной брони" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="210.0" />
                         <Label layoutX="755.0" layoutY="114.0" prefWidth="459.0" text="Вставить данные выбранного бронирования" AnchorPane.rightAnchor="-166.0" AnchorPane.topAnchor="114.0" />
                         <Label layoutX="755.0" layoutY="131.0" text="при следующей регистрации клиента" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="131.0" />
-                        <CheckBox layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="123.0" />
-                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <CheckBox fx:id="IsBookingsDataIncludedToNextClientRegistration" layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="123.0" />
+                        <TableView fx:id="bookingTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="bookingIdColumn" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="bookingSettlingColumn" prefWidth="75.0" text="Дата заезда" />
+                              <TableColumn fx:id="bookingEvictionColumn" prefWidth="75.0" text="Дата выезда" />
+                              <TableColumn fx:id="bookingGuestsValueColumn" prefWidth="75.0" text="Количество взрослых" />
+                              <TableColumn fx:id="bookingKidsValueColumn" prefWidth="75.0" text="Количество детей" />
+                              <TableColumn fx:id="bookingApartmentIdColumn" prefWidth="75.0" text="apartment_id" />
+                              <TableColumn fx:id="bookingClientIdColumn" prefWidth="75.0" text="client_id" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -110,30 +122,32 @@
                      </children></AnchorPane>
               </content>
             </Tab>
-          <Tab text="Работа с номерами">
+          <Tab fx:id="apartmentsTab" text="Работа с номерами">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о номерах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
-                        <TextField layoutX="895.0" layoutY="49.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="49.0" />
+                        <Button layoutX="755.0" layoutY="14.0" mnemonicParsing="false" onAction="#OnSelectAllApartments" prefHeight="24.0" prefWidth="279.0" text="Вывести информацию о номерах" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <TextField fx:id="apartmentsNumberTF" layoutX="895.0" layoutY="49.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="49.0" />
                         <Label layoutX="755.0" layoutY="53.0" text="Числовое обозначение" AnchorPane.rightAnchor="163.0" AnchorPane.topAnchor="53.0" />
                         <Label layoutX="755.0" layoutY="84.0" text="Тип номера" AnchorPane.rightAnchor="227.0" AnchorPane.topAnchor="84.0" />
-                        <ComboBox layoutX="895.0" layoutY="80.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0" />
-                        <TextField layoutX="895.0" layoutY="112.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="112.0" />
+                        <ComboBox fx:id="apartmentsTypeCB" layoutX="895.0" layoutY="80.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="80.0" />
+                        <TextField fx:id="apartmentsPriceTF" layoutX="895.0" layoutY="112.0" prefHeight="25.0" prefWidth="139.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="112.0" />
                         <Label layoutX="755.0" layoutY="116.0" text="Цена за человека" AnchorPane.rightAnchor="195.0" AnchorPane.topAnchor="116.0" />
                         <Label layoutX="755.0" layoutY="163.0" text="Скидка за ребёнка: " AnchorPane.rightAnchor="184.0" AnchorPane.topAnchor="163.0" />
-                        <Label layoutX="881.0" layoutY="163.0" text="\%value%" AnchorPane.rightAnchor="119.0" AnchorPane.topAnchor="163.0" />
-                        <Button layoutX="755.0" layoutY="187.0" mnemonicParsing="false" text="Заменить на" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="187.0" />
-                        <TextField layoutX="847.0" layoutY="187.0" prefHeight="25.0" prefWidth="27.0" AnchorPane.rightAnchor="174.0" AnchorPane.topAnchor="187.0" />
+                        <Label fx:id="discountCurrentValueL" layoutX="881.0" layoutY="163.0" text="\%value%" AnchorPane.rightAnchor="119.0" AnchorPane.topAnchor="163.0" />
+                        <Button layoutX="755.0" layoutY="187.0" mnemonicParsing="false" onAction="#OnChangeDiscount" text="Заменить на" AnchorPane.rightAnchor="208.0" AnchorPane.topAnchor="187.0" />
+                        <TextField fx:id="discountNewValueTF" layoutX="847.0" layoutY="187.0" prefHeight="25.0" prefWidth="27.0" AnchorPane.rightAnchor="174.0" AnchorPane.topAnchor="187.0" />
                         <Label layoutX="882.0" layoutY="191.0" text="\%" AnchorPane.rightAnchor="156.0" AnchorPane.topAnchor="191.0" />
-                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="279.0" text="Добавить новый номер" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-                        <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Удалить выбранный номер" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-                        <Button layoutX="191.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="243.0" text="Изменить данные о выбранном номере" AnchorPane.leftAnchor="191.0" />
-                        <Button layoutX="442.0" layoutY="421.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="442.0" />
-                        <TableView layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnAddNewApartment" prefHeight="24.0" prefWidth="279.0" text="Добавить новый номер" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                        <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteApartmentData" prefHeight="25.0" prefWidth="171.0" text="Удалить выбранный номер" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+                        <Button layoutX="191.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeApartmentData" prefHeight="25.0" prefWidth="243.0" text="Изменить данные о выбранном номере" AnchorPane.leftAnchor="191.0" />
+                        <Button layoutX="442.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnViewPhotosOfApartment" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="442.0" />
+                        <TableView fx:id="apartmentsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn prefWidth="75.0" text="C1" />
-                              <TableColumn prefWidth="75.0" text="C2" />
+                              <TableColumn fx:id="apartmentsIdColumn" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="apartmentsNumberColumn" prefWidth="75.0" text="Числовое обозначение" />
+                              <TableColumn fx:id="apartmentsTypeColumn" prefWidth="75.0" text="Тип" />
+                              <TableColumn fx:id="apartmentsPriceColumn" prefWidth="75.0" text="Стоимость суток за человека" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
