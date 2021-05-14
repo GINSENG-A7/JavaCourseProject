@@ -1,8 +1,14 @@
 package sample.Controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import sample.Models.Apartments;
+import sample.Models.Booking;
+import sample.Models.Client;
+import sample.Models.Living;
 
 public class Controller {
     //TAB CLIENTS
@@ -14,15 +20,50 @@ public class Controller {
     public TextField clientPatronymicTF;
     public DatePicker clientBirthdayDP;
     public TextField clientTelephoneTF;
-    public TableView clientsTableView;
-    public TableColumn clientIdColumn;
-    public TableColumn clientPassportSeriesColumn;
-    public TableColumn clientPassportNumberColumn;
-    public TableColumn clientNameColumn;
-    public TableColumn clientSurnameColumn;
-    public TableColumn clientPatronymicColumn;
-    public TableColumn clientBirthdayColumn;
-    public TableColumn clientTelephoneColumn;
+    public TableView<Client> clientsTableView;
+    public TableColumn<Client, Integer> clientIdColumn;
+    public TableColumn<Client, Integer> clientPassportSeriesColumn;
+    public TableColumn<Client, Integer> clientPassportNumberColumn;
+    public TableColumn<Client, String> clientNameColumn;
+    public TableColumn<Client, String> clientSurnameColumn;
+    public TableColumn<Client, String> clientPatronymicColumn;
+    public TableColumn<Client, String> clientBirthdayColumn;
+    public TableColumn<Client, String> clientTelephoneColumn;
+    private ObservableList<Client> clientsOList = FXCollections.observableArrayList();
+
+    @FXML
+    void initialize(){
+        clientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
+        clientPassportSeriesColumn.setCellValueFactory(cellData -> cellData.getValue().passport_seriesProperty().asObject());
+        clientPassportNumberColumn.setCellValueFactory(cellData -> cellData.getValue().passport_numberProperty().asObject());
+        clientNameColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().nameProperty());
+        clientSurnameColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().surnameProperty());
+        clientPatronymicColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().patronymicProperty());
+        clientBirthdayColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().birthdayProperty());
+        clientTelephoneColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().telephoneProperty());
+
+        livingIdColumn.setCellValueFactory(cellData -> cellData.getValue().living_idProperty().asObject());
+        livingSettlingColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().settlingProperty());
+        livingEvictionColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().evictionProperty());
+        livingGuestsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_guestsProperty().asObject());
+        livingKidsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_kidsProperty().asObject());
+        livingApartmentIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
+        livingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
+        livingASIdColumn.setCellValueFactory((cellData -> cellData.getValue().as_idProperty().asObject()));
+
+        bookingIdColumn.setCellValueFactory(cellData -> cellData.getValue().booking_idProperty().asObject());
+        bookingSettlingColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().settlingProperty());
+        bookingEvictionColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().evictionProperty());
+        bookingGuestsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_guestsProperty().asObject());
+        bookingKidsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_kidsProperty().asObject());
+        bookingApartmentIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
+        bookingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
+
+        apartmentsIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
+        apartmentsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty().asObject());
+        apartmentsTypeColumn.setCellValueFactory(apartmentsStringCellDataFeatures -> apartmentsStringCellDataFeatures.getValue().typeProperty());
+        apartmentsPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
+    }
     public void OnSelectAllClients(ActionEvent actionEvent) {
     }
     public void OnRegisterNewClient(ActionEvent actionEvent) {
@@ -40,22 +81,19 @@ public class Controller {
     }
 
 
-
-
-
     //TAB LIVINGS
     public Tab livingsTab;
     public TextField livingsValueOfGuestsTF;
     public TextField livingsValueOfKidsTF;
-    public TableView livingsTableView;
-    public TableColumn livingIdColumn;
-    public TableColumn livingSettlingColumn;
-    public TableColumn livingEvictionColumn;
-    public TableColumn livingGuestsValueColumn;
-    public TableColumn livingKidsValueColumn;
-    public TableColumn livingApartmentIdColumn;
-    public TableColumn livingClientIdColumn;
-    public TableColumn livingASIdColumn;
+    public TableView<Living> livingsTableView;
+    public TableColumn<Living, Integer> livingIdColumn;
+    public TableColumn<Living, String> livingSettlingColumn;
+    public TableColumn<Living, String> livingEvictionColumn;
+    public TableColumn<Living, Integer> livingGuestsValueColumn;
+    public TableColumn<Living, Integer> livingKidsValueColumn;
+    public TableColumn<Living, Integer> livingApartmentIdColumn;
+    public TableColumn<Living, Integer> livingClientIdColumn;
+    public TableColumn<Living, Integer> livingASIdColumn;
 
     public void OnSelectAllLivings(ActionEvent actionEvent) {
     }
@@ -79,14 +117,15 @@ public class Controller {
     public TextField bookingsValueOfGuestsTF;
     public TextField bookingsValueOfKidsTF;
     public CheckBox IsBookingsDataIncludedToNextClientRegistration;
-    public TableView bookingTableView;
-    public TableColumn bookingIdColumn;
-    public TableColumn bookingSettlingColumn;
-    public TableColumn bookingEvictionColumn;
-    public TableColumn bookingGuestsValueColumn;
-    public TableColumn bookingKidsValueColumn;
-    public TableColumn bookingApartmentIdColumn;
-    public TableColumn bookingClientIdColumn;
+    public TableView<Booking> bookingTableView;
+    public TableColumn<Booking, Integer> bookingIdColumn;
+    public TableColumn<Booking, String> bookingSettlingColumn;
+    public TableColumn<Booking, String> bookingEvictionColumn;
+    public TableColumn<Booking, Integer> bookingGuestsValueColumn;
+    public TableColumn<Booking, Integer> bookingKidsValueColumn;
+    public TableColumn<Booking, Integer> bookingApartmentIdColumn;
+    public TableColumn<Booking, Integer> bookingClientIdColumn;
+
     public void OnSelectAllBookings(ActionEvent actionEvent) {
     }
 
@@ -107,11 +146,11 @@ public class Controller {
     public TextField apartmentsPriceTF;
     public Label discountCurrentValueL;
     public TextField discountNewValueTF;
-    public TableView apartmentsTableView;
-    public TableColumn apartmentsIdColumn;
-    public TableColumn apartmentsNumberColumn;
-    public TableColumn apartmentsTypeColumn;
-    public TableColumn apartmentsPriceColumn;
+    public TableView<Apartments> apartmentsTableView;
+    public TableColumn<Apartments, Integer> apartmentsIdColumn;
+    public TableColumn<Apartments, Integer> apartmentsNumberColumn;
+    public TableColumn<Apartments, String> apartmentsTypeColumn;
+    public TableColumn<Apartments, Integer> apartmentsPriceColumn;
 
     public void OnSelectAllApartments(ActionEvent actionEvent) {
     }
@@ -129,8 +168,5 @@ public class Controller {
     }
 
     public void OnViewPhotosOfApartment(ActionEvent actionEvent) {
-    }
-    @FXML
-    void initialize() {
     }
 }

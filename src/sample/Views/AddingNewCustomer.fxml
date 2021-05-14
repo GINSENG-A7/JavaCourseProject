@@ -14,27 +14,23 @@
    <children>
       <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
         <columns>
-          <TableColumn fx:id="anCustomerIdColumn" prefWidth="75.0" text="id" />
-          <TableColumn fx:id="anCustomerPasportSeriesColumn" prefWidth="75.0" text="Серия паспорта" />
-            <TableColumn fx:id="anCustomerPasportNumberColumn" prefWidth="75.0" text="Номер паспорта" />
-            <TableColumn fx:id="anCustomerNameColumn" prefWidth="75.0" text="Имя" />
-            <TableColumn fx:id="anCustomerSurnameColumn" prefWidth="75.0" text="Фамилия" />
-            <TableColumn fx:id="anCustomerPatronymicColumn" prefWidth="75.0" text="Отчество" />
-            <TableColumn fx:id="anCustomerBirthdayColumn" prefWidth="75.0" text="Дата рождения" />
-            <TableColumn fx:id="anCustomerTelephoneColumn" prefWidth="75.0" text="Телефон" />
+          <TableColumn fx:id="anCustomerApartmentIdColumn" prefWidth="75.0" text="id" />
+          <TableColumn fx:id="anCustomerApartmentNumberColumn" prefWidth="75.0" text="Численное обозначение" />
+          <TableColumn fx:id="anCustomerApartmentTypeColumn" prefWidth="75.0" text="Тип" />
+          <TableColumn fx:id="anCustomerApartmentPriceColumn" prefWidth="75.0" text="Стоимость суток с человека" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextField fx:id="anCustomerPasportSeriesTF" layoutX="822.0" layoutY="39.0" />
+      <TextField fx:id="anCustomerPassportsSeriesTF" layoutX="822.0" layoutY="39.0" />
       <Label layoutX="790.0" layoutY="14.0" text="Данные о клиенте" underline="true">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
       <Label layoutX="707.0" layoutY="43.0" text="Серия паспорта" />
-      <TextField fx:id="anCustomerPasportNumberTF" layoutX="822.0" layoutY="70.0" />
+      <TextField fx:id="anCustomerPassportNumberTF" layoutX="822.0" layoutY="70.0" />
       <TextField fx:id="anCustomerNameTF" layoutX="822.0" layoutY="101.0" />
       <TextField fx:id="anCustomerSurnameTF" layoutX="822.0" layoutY="132.0" />
       <TextField fx:id="anCustomerPatronymicTF" layoutX="822.0" layoutY="164.0" />
@@ -75,7 +71,7 @@
       <DatePicker fx:id="anCustomerEvictionFilterDP" layoutX="218.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" />
       <Label layoutX="18.0" layoutY="381.0" text="От" />
       <Label layoutX="196.0" layoutY="381.0" text="до" />
-      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0" />
+      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0"/>
       <TextField fx:id="anCustomerBottomPriceFilterTF" layoutX="40.0" layoutY="377.0" />
       <ComboBox fx:id="anCustomerApartmentTypeCB" layoutX="100.0" layoutY="413.0" prefHeight="25.0" prefWidth="120.0" />
       <Label layoutX="19.0" layoutY="417.0" text="Тип номера" />

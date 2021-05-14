@@ -4,7 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 
 public class Booking {
-    private IntegerProperty living_id;
+    private IntegerProperty booking_id;
     private StringProperty settling;
     private StringProperty eviction;
     private IntegerProperty value_of_guests;
@@ -12,8 +12,8 @@ public class Booking {
     private IntegerProperty apartment_id;
     private IntegerProperty client_id;
 
-    public Booking(IntegerProperty living_id, StringProperty settling, StringProperty eviction, IntegerProperty value_of_guests, IntegerProperty value_of_kids, IntegerProperty apartment_id, IntegerProperty client_id) {
-        this.living_id = living_id;
+    public Booking(IntegerProperty booking_id, StringProperty settling, StringProperty eviction, IntegerProperty value_of_guests, IntegerProperty value_of_kids, IntegerProperty apartment_id, IntegerProperty client_id) {
+        this.booking_id = booking_id;
         this.settling = settling;
         this.eviction = eviction;
         this.value_of_guests = value_of_guests;
@@ -22,14 +22,14 @@ public class Booking {
         this.client_id = client_id;
     }
 
-    public int getLiving_id() {
-        return living_id.get();
+    public int getBooking_id() {
+        return booking_id.get();
     }
-    public IntegerProperty living_idProperty() {
-        return living_id;
+    public IntegerProperty booking_idProperty() {
+        return booking_id;
     }
-    public void setLiving_id(int living_id) {
-        this.living_id.set(living_id);
+    public void setBooking_id(int booking_id) {
+        this.booking_id.set(booking_id);
     }
 
     public String getSettling() {
