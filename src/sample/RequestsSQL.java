@@ -109,7 +109,7 @@ public class RequestsSQL {
         return set;
     }
 
-    public static int SelectNthIdFromCustomerWherePassportDataDefinedToString__ALTERNATIVE__(Connection conn, int ps, int pn) throws SQLException { //Очень странный метод, не знаю как я его вообще придумал. Не уверен, что смогу его заменить, поэтому выше напишу его альтернативу
+    public static int SelectNthIdFromCustomerWherePassportDataDefinedToString__ALTERNATIVE__(Connection conn, int ps, int pn) throws SQLException {
         String query = "SELECT DISTINCT customer_id FROM courseprojectschema.Customer WHERE passport_series = " + ps + " AND passport_number = " + pn;
         ResultSet set = conn.createStatement().executeQuery(query);
         if(set == null)
@@ -280,5 +280,111 @@ public class RequestsSQL {
         }
     }
 
-    //Добавить в этот класс запросы на удаление и изменение сущностей!!!
+    //Элементарные запросы на удаление и изменение сущностей!!!
+    public static void UpdateCustomerWithValues(Connection conn, int clientId, int passportSeries, int passportNumber, String name, String surname, String patronymic, Date birthday, String telephone) throws SQLException {
+        String query = "UPDATE Customer SET passport_series = " + passportSeries + ", passport_number = " + passportNumber + ", name = \'" + name + "\', surname = \'" + surname + "\', patronymic = \'" + patronymic + "\', birthday = \'" + birthday + "\', tel_number = \'" + telephone + "\' WHERE customer_id = " + clientId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeleteNullableCustomer(Connection conn, int clientId) throws SQLException {
+        String query = "DELETE FROM Customer WHERE living_id = " + clientId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeleteAllInfoAboutCustomer(Connection conn, int clientId) throws SQLException {
+        String query1 = "DELETE FROM Customer WHERE customer_id = " + clientId;
+        conn.createStatement().executeUpdate(query1);
+        String query2 = "DELETE FROM Living WHERE customer_id = " + clientId;
+        conn.createStatement().executeUpdate(query2);
+        String query3 = "DELETE FROM Booking WHERE customer_id = " + clientId;
+        conn.createStatement().executeUpdate(query3);
+    }
+
+    public static void InsertCustomerAndLivingAndAdditionalServicesEntry(Connection conn, int passportSeries, int passportNumber, String name, String surname, String patronymic, Date birthday, String telephone, int number, Date settling, Date eviction, int vog, int vok) throws SQLException {
+        String query1 = "INSERT INTO Customer (passport_series, passport_number, name, surname, patronymic, birthday, tel_number) VALUES (\'" + passportSeries + "\', \'" + passportNumber + "\', \'" + name + "\', \'" + surname + "\', \'" + patronymic + "\', \'" + birthday + "\', \'" + telephone + "\')";
+        conn.createStatement().executeUpdate(query1);
+        String query2 = "select @@IDENTITY";
+        ResultSet set1 = conn.createStatement().executeQuery(query2);
+        int customer_id = set1.getInt(1);
+        String query3 = "INSERT INTO Additional_services (mini_bar, clothes_washing, telephone, intercity_telephone, food) VALUES (0, 0, 0, 0, 0)";
+        conn.createStatement().executeUpdate(query3);
+        ResultSet set2 = conn.createStatement().executeQuery(query2);
+        int as_id = set2.getInt(1);
+        String query4 = "INSERT INTO Living (number, settling, eviction, value_of_guests, value_of_kids, customer_id, as_id) VALUES (\'" + number + "\', \'" + settling + "\', \'" + eviction + "\', \'" + vog + "\', \'" + vok + "\', \'" + customer_id + "\', \'" + as_id +"\')";
+        conn.createStatement().executeUpdate(query4);
+    }
+
+    public static void InsertCustomerAndBookingAndEntry(Connection conn, int passportSeries, int passportNumber, String name, String surname, String patronymic, Date birthday, String telephone, int number, Date settling, Date eviction, int vog, int vok) throws SQLException {
+        String query1 = "INSERT INTO Customer (passport_series, passport_number, name, surname, patronymic, birthday, tel_number) VALUES (\'" + passportSeries + "\', \'" + passportNumber + "\', \'" + name + "\', \'" + surname + "\', \'" + patronymic + "\', \'" + birthday + "\', \'" + telephone + "\')";
+        conn.createStatement().executeUpdate(query1);
+        String query2 = "select @@IDENTITY";
+        ResultSet set1 = conn.createStatement().executeQuery(query2);
+        int customer_id = set1.getInt(1);
+        String query3 = "INSERT INTO Booking (number, settling, eviction, value_of_guests, value_of_kids, customer_id, as_id) VALUES (\'" + number + "\', \'" + settling + "\', \'" + eviction + "\', \'" + vog + "\', \'" + vok + "\', \'" + customer_id + "\', \')";
+        conn.createStatement().executeUpdate(query3);
+    }
+
+    public static void ChangeLivingEntry(Connection conn, int livingId, int vog, int vok) throws SQLException {
+        String query = "UPDATE Living SET value_of_guests = " + vog + ", value_of_kids = " + vok + " WHERE living_id = " + livingId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeleteLivingEntry(Connection conn, int livingId) throws SQLException {
+        String query = "DELETE FROM Living WHERE living_id = " + livingId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void InsertLivingEntry(Connection conn, int number, Date settling, Date eviction, int vog, int vok, int customer_id) throws SQLException {
+        String query1 = "INSERT INTO Additional_services (mini_bar, clothes_washing, telephone, intercity_telephone, food) VALUES (0, 0, 0, 0, 0)";
+        conn.createStatement().executeUpdate(query1);
+        String query2 = "select @@IDENTITY";
+        ResultSet set = conn.createStatement().executeQuery(query2);
+        int as_id = set.getInt(1);
+        String query3 = "INSERT INTO Living (number, settling, eviction, value_of_guests, value_of_kids, customer_id, as_id) VALUES (\'" + number + "\', \'" + settling + "\', \'" + eviction + "\', \'" + vog + "\', \'" + vok + "\', \'" + customer_id + "\', \'" + as_id +"\')";
+        conn.createStatement().executeUpdate(query3);
+    }
+
+    public static void ChangeBookingEntry(Connection conn, int bookingId, int vog, int vok) throws SQLException {
+        String query = "UPDATE Living SET value_of_guests = " + vog + ", value_of_kids = " + vok + " WHERE living_id = " + bookingId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeleteBookingEntry(Connection conn, int bookingId) throws SQLException {
+        String query = "DELETE FROM Booking WHERE booking_id = " + bookingId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void InsertBookingEntry(Connection conn, int number, Date settling, Date eviction, int vog, int vok, int customer_id) throws SQLException {
+        String query = "INSERT INTO Booking (number, settling, eviction, value_of_guests, value_of_kids, customer_id) VALUES (\'" + number + "\', \'" + settling + "\', \'" + eviction + "\', \'" + vog + "\', \'" + vok + "\', \'" + customer_id + "\')";
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void ChangeApartmentsEntry(Connection conn, int apartmentId, int number, String type, int price) throws SQLException {
+        String query = "UPDATE Apartments SET apartment_id = " + number + " , \"type\" = \'" + type + "\', price = " + price + " WHERE apartmentId = " + apartmentId;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeleteApartmentsEntry(Connection conn, int apartmentId) throws SQLException {
+        String query1 = "DELETE FROM Apartments WHERE apartment_id = " + apartmentId;
+        conn.createStatement().executeUpdate(query1);
+        String query2 = "DELETE FROM Photos WHERE apartment_id = " + apartmentId;
+        conn.createStatement().executeUpdate(query2);
+    }
+
+    public static ResultSet SelectApartmentsIdWithNumber(Connection conn, int number) throws SQLException {
+        String query = "SELECT living_id FROM courseprojectschema.Apartments WHERE number = " + number;
+        ResultSet set = conn.createStatement().executeQuery(query);
+        return set;
+    }
+
+    public static void ChangeAdditionalServices(Connection conn, int as_id, int mini_bar, int clothes_washing, int telephone, int intercity_telephone, int food) throws SQLException {
+        String query = "UPDATE Additional_services SET mini_bar = " + mini_bar + ", clothes_washing = " + clothes_washing + ", telephone = " + telephone + ", intercity_telephone = " + intercity_telephone + ", food = " + food +" WHERE as_id = " + as_id;
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void InsertPhotoEntry(Connection conn, String path, int apartmentId) throws SQLException {
+        String query = "INSERT INTO Photos (path, number) VALUES (\'" + path + "\', \'" + apartmentId + "\')";
+        conn.createStatement().executeUpdate(query);
+    }
+    //Заменить все Customer на Client
 }
