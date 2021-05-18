@@ -1,14 +1,22 @@
 package sample.Controllers;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import sample.DbHandler;
 import sample.Models.Apartments;
 import sample.Models.Booking;
 import sample.Models.Client;
 import sample.Models.Living;
+import sample.RequestsSQL;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Controller {
     //TAB CLIENTS
@@ -30,6 +38,7 @@ public class Controller {
     public TableColumn<Client, String> clientBirthdayColumn;
     public TableColumn<Client, String> clientTelephoneColumn;
     private ObservableList<Client> clientsOList = FXCollections.observableArrayList();
+    DbHandler dH = DbHandler.getDbHandler();
 
     @FXML
     void initialize(){
@@ -64,7 +73,29 @@ public class Controller {
         apartmentsTypeColumn.setCellValueFactory(apartmentsStringCellDataFeatures -> apartmentsStringCellDataFeatures.getValue().typeProperty());
         apartmentsPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
     }
+
+    private void fillTableView(ResultSet localResultSet) throws SQLException {
+        while (localResultSet.next())
+        {
+            Client client = new Client(new SimpleIntegerProperty(localResultSet.getInt(1)), new SimpleIntegerProperty(localResultSet.getInt(2)), new SimpleIntegerProperty(localResultSet.getInt(3)), new SimpleStringProperty(localResultSet.getString(4)), new SimpleStringProperty(localResultSet.getString(5)), new SimpleStringProperty(localResultSet.getString(6)), new SimpleStringProperty(localResultSet.getString(7)), new SimpleStringProperty(localResultSet.getString(8)));
+//            client.setClient_id(localResultSet.getInt(1));
+//            client.setPassport_series(localResultSet.getInt(2));
+//            client.setPassport_number(localResultSet.getInt(3));
+//            client.setName(localResultSet.getString(4));
+//            client.setSurname(localResultSet.getString(5));
+//            client.setPatronymic(localResultSet.getString(6));
+//            client.setBirthday(localResultSet.getString(7));
+//            client.setTelephone(localResultSet.getString(8));
+            clientsOList.add(client);
+        }
+    }
+
     public void OnSelectAllClients(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            fillTableView(RequestsSQL.SelectAllFromClient(connection));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     public void OnRegisterNewClient(ActionEvent actionEvent) {
     }

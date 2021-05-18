@@ -103,4 +103,7 @@ public class Client {
         this.birthday = birthday;
         this.telephone = telephone;
     }
+//    public Client(){
+//        this(0, 0, 0, "", "", "", "", "");
+//    }
 }
