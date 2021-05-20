@@ -14,7 +14,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="1048.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.Controller">
    <children>
-      <TabPane prefHeight="489.0" prefWidth="1048.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="tabPane" prefHeight="489.0" prefWidth="1048.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
             <Tab fx:id="clientsTab" text="Работа с клиентами">
                 <content>
@@ -39,7 +39,7 @@
                             <TextField fx:id="clientTelephoneTF" layoutX="885.0" layoutY="236.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="236.0" />
                             <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteClientData" prefHeight="25.0" prefWidth="197.0" text="Удалить выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
                             <Button layoutX="218.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeClientData" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="218.0" />
-                        <TableView fx:id="clientsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="clientsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedClientsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                           <columns>
                             <TableColumn fx:id="clientIdColumn" prefWidth="75.0" text="id" />
                             <TableColumn fx:id="clientPassportSeriesColumn" prefWidth="75.0" text="Серия паспорта" />
@@ -72,7 +72,7 @@
                         <Button layoutX="755.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnMoveToClientByLiving" prefHeight="25.0" prefWidth="279.0" text="Перейти к клиенту" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
                         <Button layoutX="15.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteLivingData" prefHeight="25.0" prefWidth="216.0" text="Удалить выбранное проживание" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="15.0" />
                         <Button layoutX="237.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeLivingData" prefHeight="25.0" prefWidth="261.0" text="Изменить данные выбранного проживания" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="237.0" />
-                        <TableView fx:id="livingsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="livingsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedLivingsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
                               <TableColumn fx:id="livingIdColumn" prefWidth="75.0" text="id" />
                               <TableColumn fx:id="livingSettlingColumn" prefWidth="75.0" text="Дата заезда" />
@@ -105,7 +105,7 @@
                         <Label layoutX="755.0" layoutY="114.0" prefWidth="459.0" text="Вставить данные выбранного бронирования" AnchorPane.rightAnchor="-166.0" AnchorPane.topAnchor="114.0" />
                         <Label layoutX="755.0" layoutY="131.0" text="при следующей регистрации клиента" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="131.0" />
                         <CheckBox fx:id="IsBookingsDataIncludedToNextClientRegistration" layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="123.0" />
-                        <TableView fx:id="bookingTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="bookingTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedBookingsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
                               <TableColumn fx:id="bookingIdColumn" prefWidth="75.0" text="id" />
                               <TableColumn fx:id="bookingSettlingColumn" prefWidth="75.0" text="Дата заезда" />
@@ -142,7 +142,7 @@
                         <Button layoutX="14.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnDeleteApartmentData" prefHeight="25.0" prefWidth="171.0" text="Удалить выбранный номер" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
                         <Button layoutX="191.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeApartmentData" prefHeight="25.0" prefWidth="243.0" text="Изменить данные о выбранном номере" AnchorPane.leftAnchor="191.0" />
                         <Button layoutX="442.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnViewPhotosOfApartment" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="442.0" />
-                        <TableView fx:id="apartmentsTableView" layoutX="15.0" layoutY="14.0" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="apartmentsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedApartmentsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
                               <TableColumn fx:id="apartmentsIdColumn" prefWidth="75.0" text="id" />
                               <TableColumn fx:id="apartmentsNumberColumn" prefWidth="75.0" text="Числовое обозначение" />

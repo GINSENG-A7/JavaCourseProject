@@ -1,6 +1,8 @@
 package sample.Models;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Client {
@@ -103,7 +105,18 @@ public class Client {
         this.birthday = birthday;
         this.telephone = telephone;
     }
-//    public Client(){
-//        this(0, 0, 0, "", "", "", "", "");
-//    }
+
+    public Client(int client_id, int passport_series, int passport_number, String name, String surname, String patronymic, String birthday, String telephone){
+        this.client_id = new SimpleIntegerProperty(client_id);
+        this.passport_series = new SimpleIntegerProperty(passport_series);
+        this.passport_number = new SimpleIntegerProperty(passport_number);
+        this.name = new SimpleStringProperty(name);
+        this.surname = new SimpleStringProperty(surname);
+        this.patronymic = new SimpleStringProperty(patronymic);
+        this.birthday = new SimpleStringProperty(birthday);
+        this.telephone = new SimpleStringProperty(telephone);
+    }
+    public Client(){
+        this(0, 0, 0, "", "", "", "", "");
+    }
 }

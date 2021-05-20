@@ -10,6 +10,32 @@ import java.io.IOException;
 
 public class Main extends Application {
 
+    private static Stage mainStage;
+    private static Stage addingNewClientStage;
+    private static Stage addingNewNumberStage;
+    private static Stage editingAdditionalServicesStage;
+    private static Stage viewingApartmentsPhotosStage;
+
+    public static Stage getMainStage() {
+        return mainStage;
+    }
+
+    public static Stage getAddingNewClientStage() {
+        return addingNewClientStage;
+    }
+
+    public static Stage getAddingNewNumberStage() {
+        return addingNewNumberStage;
+    }
+
+    public static Stage getEditingAdditionalServicesStage() {
+        return editingAdditionalServicesStage;
+    }
+
+    public static Stage getViewingApartmentsPhotosStage() {
+        return viewingApartmentsPhotosStage;
+    }
+
     @Override
     public void start(Stage primaryStage){
         try

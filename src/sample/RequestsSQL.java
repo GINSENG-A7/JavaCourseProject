@@ -1,5 +1,7 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import sample.Models.PseudoApartmentTypes;
 
 import java.sql.Connection;
@@ -39,9 +41,9 @@ public class RequestsSQL {
         return set;
     }
 
-    public static ArrayList<String> GetTypesOfApartments(Connection conn, String[] cE) throws SQLException // Получаем все реально имеющиеся типы номеров для данной гостинницы для последующего использоваия в ComboBox
+    public static ObservableList<String> GetTypesOfApartments(Connection conn) throws SQLException // Получаем все реально имеющиеся типы номеров для данной гостинницы для последующего использоваия в ComboBox
     {
-        ArrayList<String> currentTypesOfApartments = new ArrayList<String>();
+        ObservableList<String> currentTypesOfApartments = FXCollections.observableArrayList();
         String query = "SELECT DISTINCT type FROM courseprojectschema.Apartments";
         ResultSet set = conn.createStatement().executeQuery(query);
         if (set != null)
@@ -87,9 +89,10 @@ public class RequestsSQL {
 
     public static boolean TypeOfApartmentsIsCorrect(Connection conn, String cb)
     {
-        for(int i = 0; i < PseudoApartmentTypes.getTypesArray().length; i++)
+        PseudoApartmentTypes pAT = PseudoApartmentTypes.getApartmentsTypes();
+        for(int i = 0; i < pAT.getTypesArray().length; i++)
         {
-            if(PseudoApartmentTypes.getTypesArray()[i].equals(cb))
+            if(pAT.getTypesArray()[i].equals(cb))
             {
                 return true;
             }
@@ -98,7 +101,7 @@ public class RequestsSQL {
     }
 
     public static ResultSet SelectAllFromClient(Connection conn) throws SQLException {
-        String query = "SELECT passport_series, passport_number, name, surname, patronymic, birthday, tel_number FROM courseprojectschema.Client";
+        String query = "SELECT client_id, passport_series, passport_number, name, surname, patronymic, birthday, tel_number FROM courseprojectschema.Client";
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }

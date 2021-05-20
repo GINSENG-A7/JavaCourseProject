@@ -3,9 +3,16 @@ package sample.Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import sample.Models.Apartments;
 
-public class AddingNewCustomerController {
+public class AddingNewClientController {
+    private Stage dialogStage;
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
+
     public TableView<Apartments> anCustomerTableView; //Взять поля из модели Apartments вместо Client
     public TableColumn<Apartments, Integer> anCustomerApartmentIdColumn;
     public TableColumn<Apartments, Integer> anCustomerApartmentNumberColumn;
