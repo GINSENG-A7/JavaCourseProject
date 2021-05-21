@@ -44,7 +44,7 @@ public class RequestsSQL {
     public static ObservableList<String> GetTypesOfApartments(Connection conn) throws SQLException // Получаем все реально имеющиеся типы номеров для данной гостинницы для последующего использоваия в ComboBox
     {
         ObservableList<String> currentTypesOfApartments = FXCollections.observableArrayList();
-        String query = "SELECT DISTINCT type FROM courseprojectschema.Apartments";
+        String query = "SELECT DISTINCT type FROM courseprojectschema.Apartment";
         ResultSet set = conn.createStatement().executeQuery(query);
         if (set != null)
         {
@@ -137,32 +137,32 @@ public class RequestsSQL {
             return set.getString(1);
         }
     }
-    public static ResultSet SelectAllFromclientByClientId(Connection conn, int iOC) throws SQLException {
+    public static ResultSet SelectAllFromClientByClientId(Connection conn, int iOC) throws SQLException {
         String query = "SELECT passport_series, passport_number, name, surname, patronymic, birthday, tel_number FROM courseprojectschema.Client WHERE client_id = " + iOC;
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }
 
     public static ResultSet SelectAllFromLiving(Connection conn) throws SQLException {
-        String query = "SELECT c.passport_series, c.passport_number, c.name, c.surname, c.patronymic, l.settling, l.eviction, l.number, l.value_of_guests, l.value_of_kids, l.as_id, l.living_id FROM courseprojectschema.Client c, Living l WHERE c.client_id = l.client_id";
+        String query = "SELECT l.living_id, c.client_id, c.name, c.surname, c.patronymic, l.settling, l.eviction, a.number, l.value_of_guests, l.value_of_kids, a.apartment_id, l.as_id FROM courseprojectschema.Client c, Living l, Apartment a WHERE c.client_id = l.client_id AND l.apartment_id = a.apartment_id";
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }
 
     public static ResultSet SelectAllFromLivingByClientId(Connection conn, int iOC) throws SQLException {
-        String query = "SELECT c.passport_series, c.passport_number, c.name, c.surname, c.patronymic, l.settling, l.eviction, l.number, l.value_of_guests, l.value_of_kids, l.as_id, l.living_id FROM courseprojectschema.Client c, Living l WHERE l.client_id = " + iOC + " AND c.client_id = " + iOC;
+        String query = "SELECT l.living_id, c.client_id, c.name, c.surname, c.patronymic, l.settling, l.eviction, a.number, l.value_of_guests, l.value_of_kids, a.apartment_id, l.as_id FROM courseprojectschema.Client c, courseprojectschema.Living l, courseprojectschema.Apartment a WHERE l.client_id = " + iOC + " AND c.client_id = " + iOC + " AND l.apartment_id = a.apartment_id";
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }
 
     public static ResultSet SelectAllFromBooking(Connection conn) throws SQLException {
-        String query = "SELECT c.passport_series, c.passport_number, c.name, c.surname, c.patronymic, b.settling, b.eviction, b.number, b.value_of_guests, b.value_of_kids, b.booking_id, b.booking_id FROM courseprojectschema.Client c, Booking b WHERE c.client_id = b.client_id";
+        String query = "SELECT b.booking_id, b.client_id, c.name, c.surname, c.patronymic, b.settling, b.eviction, a.number, b.value_of_guests, b.value_of_kids, a.apartment_id FROM courseprojectschema.Client c, courseprojectschema.Booking b, courseprojectschema.Apartment a WHERE c.client_id = b.client_id AND b.apartment_id = a.apartment_id";
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }
 
     public static ResultSet SelectAllFromBookingByClientId(Connection conn, int iOC) throws SQLException {
-        String query = "SELECT c.passport_series, c.passport_number, c.name, c.surname, c.patronymic, b.settling, b.eviction, b.number, b.value_of_guests, b.value_of_kids, b.booking_id, b.booking_id FROM courseprojectschema.Client c, Booking b WHERE b.client_id = " + iOC + " AND c.client_id = " + iOC;
+        String query = "SELECT b.booking_id, b.client_id, c.name, c.surname, c.patronymic, b.settling, b.eviction, a.number, b.value_of_guests, b.value_of_kids, a.apartment_id FROM courseprojectschema.Client c, courseprojectschema.Booking b, courseprojectschema.Apartment a WHERE b.client_id = " + iOC + " AND c.client_id = " + iOC + " AND b.apartment_id = a.apartment_id";
         ResultSet set = conn.createStatement().executeQuery(query);
         return set;
     }

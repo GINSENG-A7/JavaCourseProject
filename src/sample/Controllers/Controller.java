@@ -45,6 +45,7 @@ public class Controller {
     public TableColumn<Client, String> clientBirthdayColumn;
     public TableColumn<Client, String> clientTelephoneColumn;
     private ObservableList<Client> clientsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedClient = null;
     DbHandler dH = DbHandler.getDbHandler();
 
     @FXML
@@ -59,21 +60,29 @@ public class Controller {
         clientTelephoneColumn.setCellValueFactory(clientStringCellDataFeatures -> clientStringCellDataFeatures.getValue().telephoneProperty());
 
         livingIdColumn.setCellValueFactory(cellData -> cellData.getValue().living_idProperty().asObject());
+        livingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
+        livingClientNameColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().living_client_nameProperty());
+        livingClientSurnameColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().living_client_surnameProperty());
+        livingClientPatronymicColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().living_client_patronymicProperty());
         livingSettlingColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().settlingProperty());
         livingEvictionColumn.setCellValueFactory(livingStringCellDataFeatures -> livingStringCellDataFeatures.getValue().evictionProperty());
+        livingApartmentNumberColumn.setCellValueFactory(cellData -> cellData.getValue().living_apartment_numberProperty().asObject());
         livingGuestsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_guestsProperty().asObject());
         livingKidsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_kidsProperty().asObject());
         livingApartmentIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
-        livingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
         livingASIdColumn.setCellValueFactory((cellData -> cellData.getValue().as_idProperty().asObject()));
 
         bookingIdColumn.setCellValueFactory(cellData -> cellData.getValue().booking_idProperty().asObject());
+        bookingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
+        bookingClientNameColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().booking_client_nameProperty());
+        bookingClientSurnameColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().booking_client_surnameProperty());
+        bookingClientPatronymicColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().booking_client_patronymicProperty());
         bookingSettlingColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().settlingProperty());
         bookingEvictionColumn.setCellValueFactory(bookingStringCellDataFeatures -> bookingStringCellDataFeatures.getValue().evictionProperty());
+        bookingApartmentNumberColumn.setCellValueFactory(cellData -> cellData.getValue().booking_apartment_numberProperty().asObject());
         bookingGuestsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_guestsProperty().asObject());
         bookingKidsValueColumn.setCellValueFactory(cellData -> cellData.getValue().value_of_kidsProperty().asObject());
         bookingApartmentIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
-        bookingClientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
 
         apartmentsIdColumn.setCellValueFactory(cellData -> cellData.getValue().apartment_idProperty().asObject());
         apartmentsNumberColumn.setCellValueFactory(cellData -> cellData.getValue().numberProperty().asObject());
@@ -103,6 +112,7 @@ public class Controller {
             clientsOList.add(client);
         }
         clientsTableView.setItems(clientsOList);
+        clientsOList.clear();
     }
 
     public void OnSelectAllClients(ActionEvent actionEvent) {
@@ -145,10 +155,20 @@ public class Controller {
     }
     public void OnMoveToLivings(ActionEvent actionEvent) {
         tabPane.getSelectionModel().select(livingsTab);
+        try(Connection connection = dH.getConnection()) {
+            fillLivingsTableView(RequestsSQL.SelectAllFromLivingByClientId(connection, idOfSelectedClient));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OnMoveToBookings(ActionEvent actionEvent) {
         tabPane.getSelectionModel().select(bookingsTab);
+        try(Connection connection = dH.getConnection()) {
+            fillBookingsTableView(RequestsSQL.SelectAllFromBookingByClientId(connection, idOfSelectedClient));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OnClickedClientsTableView(MouseEvent mouseEvent) {
@@ -159,6 +179,7 @@ public class Controller {
         // check the table's selected item and get selected item
         if (clientsTableView.getSelectionModel().getSelectedItem() != null) {
             Client selectedClient = clientsTableView.getSelectionModel().getSelectedItem();
+            idOfSelectedClient = selectedClient.getClient_id();
             clientPassportSeriesTF.setText(String.valueOf(selectedClient.getPassport_series()));
             clientPassportNumberTF.setText(String.valueOf(selectedClient.getPassport_number()));
             clientNameTF.setText(selectedClient.getName());
@@ -182,12 +203,16 @@ public class Controller {
     public TextField livingsValueOfKidsTF;
     public TableView<Living> livingsTableView;
     public TableColumn<Living, Integer> livingIdColumn;
+    public TableColumn<Living, Integer> livingClientIdColumn;
+    public TableColumn<Living, String> livingClientNameColumn;
+    public TableColumn<Living, String> livingClientSurnameColumn;
+    public TableColumn<Living, String> livingClientPatronymicColumn;
     public TableColumn<Living, String> livingSettlingColumn;
     public TableColumn<Living, String> livingEvictionColumn;
+    public TableColumn<Living, Integer> livingApartmentNumberColumn;
     public TableColumn<Living, Integer> livingGuestsValueColumn;
     public TableColumn<Living, Integer> livingKidsValueColumn;
     public TableColumn<Living, Integer> livingApartmentIdColumn;
-    public TableColumn<Living, Integer> livingClientIdColumn;
     public TableColumn<Living, Integer> livingASIdColumn;
     private ObservableList<Living> livingsOList = FXCollections.observableArrayList();
 
@@ -195,18 +220,23 @@ public class Controller {
         while (localResultSet.next())
         {
             Living living = new Living(
-                new SimpleIntegerProperty(localResultSet.getInt(1)),
-                new SimpleStringProperty(localResultSet.getString(2)),
-                new SimpleStringProperty(localResultSet.getString(3)),
-                new SimpleIntegerProperty(localResultSet.getInt(4)),
-                new SimpleIntegerProperty(localResultSet.getInt(5)),
-                new SimpleIntegerProperty(localResultSet.getInt(6)),
-                new SimpleIntegerProperty(localResultSet.getInt(7)),
-                new SimpleIntegerProperty(localResultSet.getInt(8))
+                    new SimpleIntegerProperty(localResultSet.getInt(1)),
+                    new SimpleIntegerProperty(localResultSet.getInt(2)),
+                    new SimpleStringProperty(localResultSet.getString(3)),
+                    new SimpleStringProperty(localResultSet.getString(4)),
+                    new SimpleStringProperty(localResultSet.getString(5)),
+                    new SimpleStringProperty(localResultSet.getString(6)),
+                    new SimpleStringProperty(localResultSet.getString(7)),
+                    new SimpleIntegerProperty(localResultSet.getInt(8)),
+                    new SimpleIntegerProperty(localResultSet.getInt(9)),
+                    new SimpleIntegerProperty(localResultSet.getInt(10)),
+                    new SimpleIntegerProperty(localResultSet.getInt(11)),
+                    new SimpleIntegerProperty(localResultSet.getInt(12))
             );
             livingsOList.add(living);
         }
         livingsTableView.setItems(livingsOList);
+        livingsOList.clear();
     }
 
     public void OnSelectAllLivings(ActionEvent actionEvent) {
@@ -250,30 +280,38 @@ public class Controller {
     public CheckBox IsBookingsDataIncludedToNextClientRegistration;
     public TableView<Booking> bookingTableView;
     public TableColumn<Booking, Integer> bookingIdColumn;
+    public TableColumn<Booking, Integer> bookingClientIdColumn;
+    public TableColumn<Booking, String> bookingClientNameColumn;
+    public TableColumn<Booking, String> bookingClientSurnameColumn;
+    public TableColumn<Booking, String> bookingClientPatronymicColumn;
     public TableColumn<Booking, String> bookingSettlingColumn;
     public TableColumn<Booking, String> bookingEvictionColumn;
+    public TableColumn<Booking, Integer> bookingApartmentNumberColumn;
     public TableColumn<Booking, Integer> bookingGuestsValueColumn;
     public TableColumn<Booking, Integer> bookingKidsValueColumn;
     public TableColumn<Booking, Integer> bookingApartmentIdColumn;
-    public TableColumn<Booking, Integer> bookingClientIdColumn;
     private ObservableList<Booking> bookingsOList = FXCollections.observableArrayList();
 
     public void fillBookingsTableView(ResultSet localResultSet) throws SQLException {
         while (localResultSet.next())
         {
-            Living living = new Living(
+            Booking booking = new Booking(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
-                    new SimpleStringProperty(localResultSet.getString(2)),
+                    new SimpleIntegerProperty(localResultSet.getInt(2)),
                     new SimpleStringProperty(localResultSet.getString(3)),
-                    new SimpleIntegerProperty(localResultSet.getInt(4)),
-                    new SimpleIntegerProperty(localResultSet.getInt(5)),
-                    new SimpleIntegerProperty(localResultSet.getInt(6)),
-                    new SimpleIntegerProperty(localResultSet.getInt(7)),
-                    new SimpleIntegerProperty(localResultSet.getInt(8))
+                    new SimpleStringProperty(localResultSet.getString(4)),
+                    new SimpleStringProperty(localResultSet.getString(5)),
+                    new SimpleStringProperty(localResultSet.getString(6)),
+                    new SimpleStringProperty(localResultSet.getString(7)),
+                    new SimpleIntegerProperty(localResultSet.getInt(8)),
+                    new SimpleIntegerProperty(localResultSet.getInt(9)),
+                    new SimpleIntegerProperty(localResultSet.getInt(10)),
+                    new SimpleIntegerProperty(localResultSet.getInt(11))
             );
-            livingsOList.add(living);
+            bookingsOList.add(booking);
         }
-        livingsTableView.setItems(livingsOList);
+        bookingTableView.setItems(bookingsOList);
+        bookingsOList.clear();
     }
 
     public void OnSelectAllBookings(ActionEvent actionEvent) {
@@ -330,6 +368,7 @@ public class Controller {
             apartmentsOList.add(living);
         }
         apartmentsTableView.setItems(apartmentsOList);
+        apartmentsOList.clear();
     }
 
     public void OnSelectAllApartments(ActionEvent actionEvent) {
