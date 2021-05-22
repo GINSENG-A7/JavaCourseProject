@@ -4,9 +4,10 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.jetbrains.annotations.Nullable;
 
 public class Client {
-    private IntegerProperty client_id;
+    private  IntegerProperty client_id;
     private IntegerProperty passport_series;
     private IntegerProperty passport_number;
     private StringProperty name;
@@ -106,8 +107,8 @@ public class Client {
         this.telephone = telephone;
     }
 
-    public Client(int client_id, int passport_series, int passport_number, String name, String surname, String patronymic, String birthday, String telephone){
-        this.client_id = new SimpleIntegerProperty(client_id);
+    public Client( Integer client_id, Integer passport_series, Integer passport_number, String name, String surname, String patronymic, String birthday, String telephone){
+        this.client_id =  new SimpleIntegerProperty(client_id);
         this.passport_series = new SimpleIntegerProperty(passport_series);
         this.passport_number = new SimpleIntegerProperty(passport_number);
         this.name = new SimpleStringProperty(name);
@@ -117,6 +118,6 @@ public class Client {
         this.telephone = new SimpleStringProperty(telephone);
     }
     public Client(){
-        this(0, 0, 0, "", "", "", "", "");
+        this(0, 0, 0, null, null, null, null, null);
     }
 }

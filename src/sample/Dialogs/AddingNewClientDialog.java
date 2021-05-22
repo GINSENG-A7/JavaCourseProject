@@ -35,7 +35,7 @@ public class AddingNewClientDialog {
     {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(viewFileName));
-        Parent page = loader.load();
+        Parent page = loader.load(); // Тут вызывается initialize
         Stage addingNewClientStage = new Stage();
         addingNewClientStage.setTitle(windowTitle);
         addingNewClientStage.initModality(Modality.WINDOW_MODAL);
@@ -44,6 +44,7 @@ public class AddingNewClientDialog {
         addingNewClientStage.setScene(scene);
         AddingNewClientController controller = loader.getController();
         controller.setDialogStage(addingNewClientStage);
+        controller.setAddableСlient(this.client);
         addingNewClientStage.showAndWait();
     }
 }

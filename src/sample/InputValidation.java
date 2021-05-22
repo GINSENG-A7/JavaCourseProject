@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class InputValidation {
-    public static Boolean checkedRussianSymbol(String textField) {
-        String []  str = new String []{"й","ц","у","к","е","н","г","ш","щ","з","х","ъ","ф","ы","в","а","п","р","о","л","д","ж","э","я","ч","с","м","и","т","ь","б","ю","ё"};
+    public static Boolean isRowConsistsOfLetters(String textField) {
+        String []  str = new String []{"й","ц","у","к","е","н","г","ш","щ","з","х","ъ","ф","ы","в","а","п","р","о","л","д","ж","э","я","ч","с","м","и","т","ь","б","ю","ё","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m"};
         char[]  textFieldAsChars = textField.toLowerCase(Locale.ROOT).toCharArray();
 
         if(textFieldAsChars.length==0)
@@ -35,7 +35,7 @@ public class InputValidation {
         return  true;
     }
 
-    public static boolean tryParseInt(String value) {
+    public static boolean isRowConsistsOfNumbers(String value) {
         char [] symbol = value.toCharArray();
         try {
             for (var s: symbol) {
@@ -47,7 +47,7 @@ public class InputValidation {
         }
     }
 
-    public static boolean checksUniquenessObjectInToDataBase(String str, ArrayList<String> list){
+    public static boolean CheckUniquenessObjectInToDataBase(String str, ArrayList<String> list){
         for (var item : list){
             if(item.equals(str)) {
                 return false;
@@ -55,13 +55,27 @@ public class InputValidation {
         }
         return  true;
     }
-    public static boolean checksUniquenessObjectInToDataBase(String str,Integer id, ArrayList<String> list, ArrayList<Integer> idList){
+    public static boolean CheckUniquenessObjectInToDataBase(String str,Integer id, ArrayList<String> list, ArrayList<Integer> idList){
         for (int i = 0; i < list.size(); i++) {
             if( (list.get(i).equals(str)) && !idList.get(i).equals(id)) {
                 return false;
             }
         }
         return  true;
+    }
+
+    public static boolean CheckLenthOfPassportSeries(String str) {
+        if(str.length() == 4) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean CheckLenthOfPassportNumber(String str) {
+        if(str.length() == 6) {
+            return true;
+        }
+        return false;
     }
 
     public static void ShowAlert(String message) {

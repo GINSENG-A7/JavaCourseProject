@@ -6,11 +6,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import sample.Alerts;
 import sample.DbHandler;
 import sample.Dialogs.AddingNewClientDialog;
+import sample.InputValidation;
 import sample.Models.Apartments;
 import sample.Models.Booking;
 import sample.Models.Client;
@@ -18,12 +20,14 @@ import sample.Models.Living;
 import sample.RequestsSQL;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
 
-public class Controller {
+public class Controller implements Initializable {
     //TAB CLIENTS
     public AddingNewClientDialog ancDialog;
     public TabPane tabPane;
@@ -48,8 +52,8 @@ public class Controller {
     private Integer idOfSelectedClient = null;
     DbHandler dH = DbHandler.getDbHandler();
 
-    @FXML
-    void initialize(){
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         clientIdColumn.setCellValueFactory(cellData -> cellData.getValue().client_idProperty().asObject());
         clientPassportSeriesColumn.setCellValueFactory(cellData -> cellData.getValue().passport_seriesProperty().asObject());
         clientPassportNumberColumn.setCellValueFactory(cellData -> cellData.getValue().passport_numberProperty().asObject());
@@ -97,6 +101,7 @@ public class Controller {
     }
 
     private void fillClientsTableView(ResultSet localResultSet) throws SQLException {
+        clientsOList.clear();
         while (localResultSet.next())
         {
             Client client = new Client(
@@ -112,7 +117,6 @@ public class Controller {
             clientsOList.add(client);
         }
         clientsTableView.setItems(clientsOList);
-        clientsOList.clear();
     }
 
     public void OnSelectAllClients(ActionEvent actionEvent) {
@@ -126,9 +130,7 @@ public class Controller {
         if(clientPassportSeriesTF.getText().equals("") || clientPassportNumberTF.getText().equals("") || //Если все поля основной формы заполнены, то передаём данные из полей на форму добавления
         clientNameTF.getText().equals("") || clientSurnameTF.getText().equals("") ||
         clientPatronymicTF.getText().equals("") || clientBirthdayDP.getValue() == null || clientTelephoneTF.getText().equals("")) {
-            Alerts.showErrorAlert("Невозможная операция", "Регистрация клиента:", "Для регистрации клиента все поля обязательны к заполнению");
-        }
-        else {
+//            Alerts.showInformationAlert("Предупреждение", "Регистрация клиента:", "Не все поля были заполнены");
             Client client = new Client();
             ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
             try {
@@ -136,36 +138,63 @@ public class Controller {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            Client client = new Client(0,
-//                    Integer.parseInt(clientPassportSeriesTF.getText()),
-//                    Integer.parseInt(clientPassportNumberTF.getText()),
-//                    clientNameTF.getText(),
-//                    clientSurnameColumn.getText(),
-//                    clientPatronymicTF.getText(),
-//                    clientBirthdayDP.getValue().toString(),
-//                    clientTelephoneTF.getText()
-//            );
-//            ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
-//            try {
-//                ancDialog.ShowDefaultDialog();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+        }
+        else {
+            if(InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
+                    InputValidation.CheckLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
+                    InputValidation.isRowConsistsOfNumbers(clientPassportNumberTF.getText()) &&
+                    InputValidation.CheckLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(clientNameTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(clientSurnameTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(clientPatronymicTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(clientTelephoneTF.getText()) &&
+                    clientBirthdayDP.getValue().isBefore(LocalDate.now())
+            ) {
+                Client client = new Client(
+                        -1,
+                        Integer.parseInt(clientPassportSeriesTF.getText()),
+                        Integer.parseInt(clientPassportNumberTF.getText()),
+                        clientNameTF.getText(),
+                        clientSurnameTF.getText(),
+                        clientPatronymicTF.getText(),
+                        clientBirthdayDP.getValue().toString(),
+                        clientTelephoneTF.getText()
+                );
+                ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
+                try {
+                    ancDialog.ShowDefaultDialog();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else {
+                Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
+            }
         }
     }
     public void OnMoveToLivings(ActionEvent actionEvent) {
-        tabPane.getSelectionModel().select(livingsTab);
         try(Connection connection = dH.getConnection()) {
-            fillLivingsTableView(RequestsSQL.SelectAllFromLivingByClientId(connection, idOfSelectedClient));
+            if(idOfSelectedClient != null) {
+                tabPane.getSelectionModel().select(livingsTab);
+                fillLivingsTableView(RequestsSQL.SelectAllFromLivingByClientId(connection, idOfSelectedClient));
+            }
+            else {
+                Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его проживаний");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void OnMoveToBookings(ActionEvent actionEvent) {
-        tabPane.getSelectionModel().select(bookingsTab);
         try(Connection connection = dH.getConnection()) {
-            fillBookingsTableView(RequestsSQL.SelectAllFromBookingByClientId(connection, idOfSelectedClient));
+            if(idOfSelectedClient != null) {
+                tabPane.getSelectionModel().select(bookingsTab);
+                fillBookingsTableView(RequestsSQL.SelectAllFromBookingByClientId(connection, idOfSelectedClient));
+            }
+            else {
+                Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его броней");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -215,8 +244,10 @@ public class Controller {
     public TableColumn<Living, Integer> livingApartmentIdColumn;
     public TableColumn<Living, Integer> livingASIdColumn;
     private ObservableList<Living> livingsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedClientFromLiving = null;
 
     private void fillLivingsTableView(ResultSet localResultSet) throws SQLException {
+        livingsOList.clear();
         while (localResultSet.next())
         {
             Living living = new Living(
@@ -236,12 +267,11 @@ public class Controller {
             livingsOList.add(living);
         }
         livingsTableView.setItems(livingsOList);
-        livingsOList.clear();
     }
 
     public void OnSelectAllLivings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillClientsTableView(RequestsSQL.SelectAllFromLiving(connection));
+            fillLivingsTableView(RequestsSQL.SelectAllFromLiving(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -254,6 +284,7 @@ public class Controller {
     public void getLivingEntryData() {
         if (livingsTableView.getSelectionModel().getSelectedItem() != null) {
             Living selectedLiving = livingsTableView.getSelectionModel().getSelectedItem();
+            idOfSelectedClientFromLiving = selectedLiving.getClient_id();
             livingsValueOfGuestsTF.setText(String.valueOf(selectedLiving.getValue_of_guests()));
             livingsValueOfKidsTF.setText(String.valueOf(selectedLiving.getValue_of_kids()));
         }
@@ -263,6 +294,17 @@ public class Controller {
     }
 
     public void OnMoveToClientByLiving(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            if (idOfSelectedClientFromLiving != null){
+                tabPane.getSelectionModel().select(clientsTab);
+                fillClientsTableView(RequestsSQL.SelectAllFromClientByClientId(connection, idOfSelectedClientFromLiving));
+            }
+            else {
+                Alerts.showWarningAlert("Внимание!", "Проживание не выбрано", "Необходимо выбрать проживание для отображения информации о клиенте");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OnDeleteLivingData(ActionEvent actionEvent) {
@@ -291,8 +333,11 @@ public class Controller {
     public TableColumn<Booking, Integer> bookingKidsValueColumn;
     public TableColumn<Booking, Integer> bookingApartmentIdColumn;
     private ObservableList<Booking> bookingsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedClientFromBooking = null;
+
 
     public void fillBookingsTableView(ResultSet localResultSet) throws SQLException {
+        bookingsOList.clear();
         while (localResultSet.next())
         {
             Booking booking = new Booking(
@@ -311,12 +356,11 @@ public class Controller {
             bookingsOList.add(booking);
         }
         bookingTableView.setItems(bookingsOList);
-        bookingsOList.clear();
     }
 
     public void OnSelectAllBookings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillClientsTableView(RequestsSQL.SelectAllFromBooking(connection));
+            fillBookingsTableView(RequestsSQL.SelectAllFromBooking(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -329,12 +373,24 @@ public class Controller {
     public void getBookingEntryData() {
         if (bookingTableView.getSelectionModel().getSelectedItem() != null) {
             Booking selectedBooking = bookingTableView.getSelectionModel().getSelectedItem();
+            idOfSelectedClientFromBooking = selectedBooking.getClient_id();
             bookingsValueOfGuestsTF.setText(String.valueOf(selectedBooking.getValue_of_guests()));
             bookingsValueOfKidsTF.setText(String.valueOf(selectedBooking.getValue_of_kids()));
         }
     }
 
     public void OnMoveToClientByBooking(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            if(idOfSelectedClientFromBooking != null) {
+                tabPane.getSelectionModel().select(clientsTab);
+                fillClientsTableView(RequestsSQL.SelectAllFromClientByClientId(connection, idOfSelectedClientFromBooking));
+            }
+            else {
+                Alerts.showWarningAlert("Внимание!", "Бронь не выбрана", "Необходимо выбрать бронь для отображения информации о клиенте");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void OnDeleteBookingData(ActionEvent actionEvent) {
@@ -357,6 +413,7 @@ public class Controller {
     private ObservableList<Apartments> apartmentsOList = FXCollections.observableArrayList();
 
     public void fillApartmentsTableView(ResultSet localResultSet) throws SQLException {
+        apartmentsOList.clear();
         while (localResultSet.next())
         {
             Apartments living = new Apartments(
@@ -368,12 +425,11 @@ public class Controller {
             apartmentsOList.add(living);
         }
         apartmentsTableView.setItems(apartmentsOList);
-        apartmentsOList.clear();
     }
 
     public void OnSelectAllApartments(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillClientsTableView(RequestsSQL.SelectAllFromApartments(connection));
+            fillApartmentsTableView(RequestsSQL.SelectAllFromApartments(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

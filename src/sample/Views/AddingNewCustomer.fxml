@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="457.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.AddingNewClientController">
    <children>
-      <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
+      <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" onMouseClicked="#OnClickedAddingNewClientTableView" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
         <columns>
           <TableColumn fx:id="anCustomerApartmentIdColumn" prefWidth="75.0" text="id" />
           <TableColumn fx:id="anCustomerApartmentNumberColumn" prefWidth="75.0" text="Численное обозначение" />
@@ -71,7 +71,7 @@
       <DatePicker fx:id="anCustomerEvictionFilterDP" layoutX="218.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" />
       <Label layoutX="18.0" layoutY="381.0" text="От" />
       <Label layoutX="196.0" layoutY="381.0" text="до" />
-      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0"/>
+      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0" />
       <TextField fx:id="anCustomerBottomPriceFilterTF" layoutX="40.0" layoutY="377.0" />
       <ComboBox fx:id="anCustomerApartmentTypeCB" layoutX="100.0" layoutY="413.0" prefHeight="25.0" prefWidth="120.0" />
       <Label layoutX="19.0" layoutY="417.0" text="Тип номера" />
