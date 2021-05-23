@@ -7,6 +7,7 @@ import sample.Models.PseudoApartmentTypes;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,17 +42,26 @@ public class RequestsSQL {
         return set;
     }
 
+    public static Boolean IsNumberFreeForSetDate(Connection conn, Date b1, Date b2, int numberId) throws SQLException {
+        String query = "SELECT a.apartment_id FROM courseprojectschema.Apartment a WHERE ((a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Living WHERE eviction < \'" + b1 + "\') AND NOT EXISTS(SELECT number FROM courseprojectschema.Booking WHERE a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Booking))) OR (a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE settling > \'" + b2 + "\') OR (a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE eviction < \'" + b1 + "\'))) AND NOT EXISTS(SELECT apartment_id FROM courseprojectschema.Living WHERE a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Living)) OR ((a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Living WHERE eviction<\'" + b1 + "\')) AND (a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE settling>\'" + b2 + "\') OR (a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE eviction<\'" + b1 + "\')))) OR (a.apartment_id NOT IN (SELECT apartment_id FROM courseprojectschema.Living) AND a.apartment_id NOT IN (SELECT apartment_id FROM courseprojectschema.Booking)))";
+        ResultSet set = conn.createStatement().executeQuery(query);
+        while (set.next())
+        {
+            if(numberId == set.getInt(1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static ObservableList<String> GetTypesOfApartments(Connection conn) throws SQLException // Получаем все реально имеющиеся типы номеров для данной гостинницы для последующего использоваия в ComboBox
     {
         ObservableList<String> currentTypesOfApartments = FXCollections.observableArrayList();
         String query = "SELECT DISTINCT type FROM courseprojectschema.Apartment";
         ResultSet set = conn.createStatement().executeQuery(query);
-        if (set != null)
+        while (set.next())
         {
-            while (set.next())
-            {
-                currentTypesOfApartments.add(set.getString(1));
-            }
+            currentTypesOfApartments.add(set.getString(1));
         }
         return currentTypesOfApartments;
     }
@@ -77,7 +87,7 @@ public class RequestsSQL {
     public static boolean SelectSetValueOfNumberFromApartments(Connection conn, int n) throws SQLException {
         String query = "SELECT DISTINCT number FROM courseprojectschema.Apartments WHERE number = " + n;
         ResultSet set = conn.createStatement().executeQuery(query);
-        if (set == null)
+        if (set.next() == false)
         {
             return false;
         }
@@ -115,7 +125,7 @@ public class RequestsSQL {
     public static int SelectNthIdFromClientWherePassportDataDefinedToString__ALTERNATIVE__(Connection conn, int ps, int pn) throws SQLException {
         String query = "SELECT DISTINCT client_id FROM courseprojectschema.Client WHERE passport_series = " + ps + " AND passport_number = " + pn;
         ResultSet set = conn.createStatement().executeQuery(query);
-        if(set == null)
+        if(set.next() == false)
         {
             return -1;
         }
@@ -128,7 +138,7 @@ public class RequestsSQL {
     public static String SelectNthIdFromClientWherePassportDataDefinedToString(Connection conn, int ps, int pn) throws SQLException { //Очень странный метод, не знаю как я его вообще придумал. Не уверен, что смогу его заменить, поэтому выше напишу его альтернативу
         String query = "SELECT DISTINCT client_id FROM courseprojectschema.Client WHERE passport_series = " + ps + " AND passport_number = " + pn;
         ResultSet set = conn.createStatement().executeQuery(query);
-        if(set == null)
+        if(set.next() == false)
         {
             return "null";
         }
@@ -180,10 +190,9 @@ public class RequestsSQL {
     }
 
     public static boolean IsNumberOfApartmentsFreeForToday(Connection conn, int nOA) throws SQLException {
-        Date today = new Date();
-        String query = "SELECT a.number FROM courseprojectschema.Apartments a WHERE (a.number = " + nOA + ") AND ((a.number IN (SELECT number FROM courseprojectschema.Living WHERE eviction < \'" + today + "\') AND NOT EXISTS(SELECT number FROM courseprojectschema.Booking WHERE a.number IN (SELECT number FROM courseprojectschema.Booking))) OR ((a.number in (SELECT number FROM courseprojectschema.Booking WHERE eviction < \'" + today + "\'))) AND NOT EXISTS(SELECT number FROM courseprojectschema.Living WHERE a.number IN (SELECT number FROM courseprojectschema.Living)) OR ((a.number in (SELECT number FROM courseprojectschema.Living WHERE eviction < \'" + today + "\')) AND ((a.number in (SELECT number FROM courseprojectschema.Booking WHERE eviction < \'" + today + "\')))) OR (a.number NOT IN (SELECT number FROM courseprojectschema.Living) AND a.number NOT IN (SELECT number FROM courseprojectschema.Booking)))";
+        String query = "SELECT a.apartment_id FROM courseprojectschema.Apartments a WHERE (a.apartment_id = " + nOA + ") AND ((a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Living WHERE eviction < \'" + LocalDate.now() + "\') AND NOT EXISTS(SELECT apartment_id FROM courseprojectschema.Booking WHERE a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Booking))) OR ((a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE eviction < \'" + LocalDate.now() + "\'))) AND NOT EXISTS(SELECT apartment_id FROM courseprojectschema.Living WHERE a.apartment_id IN (SELECT apartment_id FROM courseprojectschema.Living)) OR ((a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Living WHERE eviction < \'" + LocalDate.now() + "\')) AND ((a.apartment_id in (SELECT apartment_id FROM courseprojectschema.Booking WHERE eviction < \'" + LocalDate.now() + "\')))) OR (a.apartment_id NOT IN (SELECT apartment_id FROM courseprojectschema.Living) AND a.apartment_id NOT IN (SELECT apartment_id FROM courseprojectschema.Booking)))";
         ResultSet set = conn.createStatement().executeQuery(query);
-        if (set == null)
+        if (set.next() == false)
         {
             return false;
         }
@@ -196,7 +205,7 @@ public class RequestsSQL {
     public static boolean IsNumberOfApartmentsUnique(Connection conn, int nOA) throws SQLException {
         String query = "SELECT DISTINCT number FROM courseprojectschema.Apartments WHERE number = " + nOA;
         ResultSet set = conn.createStatement().executeQuery(query);
-        if (set == null)
+        if (set.next() == false)
         {
             return true;
         }
@@ -207,12 +216,20 @@ public class RequestsSQL {
     }
 
     public static int ValueOfClientLivingsAndBookingsForToday(Connection conn, int iOC) throws SQLException {
-        Date today = new Date();
-        String query1 = "SELECT COUNT(l.living_id) FROM courseprojectschema.Living l WHERE l.eviction > \'" + today + "\' AND l.client_id IN (SELECT client_id FROM courseprojectschema.client WHERE client_id = " + iOC + ")";
+        LocalDate.now();
+        String query1 = "SELECT COUNT(l.living_id) FROM courseprojectschema.Living l WHERE l.eviction > \'" + LocalDate.now() + "\' AND l.client_id IN (SELECT client_id FROM courseprojectschema.client WHERE client_id = " + iOC + ")";
         ResultSet set1 = conn.createStatement().executeQuery(query1);
         String query2 = "SELECT COUNT(b.booking_id) FROM courseprojectschema.Booking b WHERE b.client_id IN (SELECT client_id FROM courseprojectschema.client WHERE client_id = " + iOC + ")";
         ResultSet set2 = conn.createStatement().executeQuery(query2);
-        int v = set1.getInt(1) + set2.getInt(1);
+        int l = 0;
+        int b = 0;
+        if(set1.next()) {
+            l = set1.getInt(1);
+        }
+        if(set2.next()) {
+            b = set2.getInt(1);
+        }
+        int v = l + b;
         return v;
     }
 
@@ -248,20 +265,17 @@ public class RequestsSQL {
         int[] v = new int[5];
         String query = "SELECT mini_bar, clothes_washing, telephone, intercity_telephone, food FROM courseprojectschema.Additional_services WHERE as_id = " + iOL;
         ResultSet set = conn.createStatement().executeQuery(query);
-        if (set != null)
+        if (set.next())
         {
-            if (set.next()) //Возможно эту строку стоит убрать и у тебя в будущем ничего не будет работать именно из-за неё
+            for (int i = 0; i < v.length; i++)
             {
-                for (int i = 0; i < v.length; i++)
+                if (set.getObject(i) == null)
                 {
-                    if (set.getObject(i) == null)
-                    {
-                        v[i] = 0;
-                    }
-                    else
-                    {
-                        v[i] = set.getInt(i);
-                    }
+                    v[i] = 0;
+                }
+                else
+                {
+                    v[i] = set.getInt(i);
                 }
             }
         }
@@ -309,22 +323,25 @@ public class RequestsSQL {
         conn.createStatement().executeUpdate(query1);
         String query2 = "select @@IDENTITY";
         ResultSet set1 = conn.createStatement().executeQuery(query2);
+        set1.next();
         int client_id = set1.getInt(1);
         String query3 = "INSERT INTO courseprojectschema.Additional_services (mini_bar, clothes_washing, telephone, intercity_telephone, food) VALUES (0, 0, 0, 0, 0)";
         conn.createStatement().executeUpdate(query3);
         ResultSet set2 = conn.createStatement().executeQuery(query2);
+        set2.next();
         int as_id = set2.getInt(1);
-        String query4 = "INSERT INTO courseprojectschema.Living (number, settling, eviction, value_of_guests, value_of_kids, client_id, as_id) VALUES (" + number + ", \'" + settling + "\', \'" + eviction + "\', " + vog + ", " + vok + ", " + client_id + ", " + as_id +")";
+        String query4 = "INSERT INTO courseprojectschema.Living (apartment_id, settling, eviction, value_of_guests, value_of_kids, client_id, as_id) VALUES (" + number + ", \'" + settling + "\', \'" + eviction + "\', " + vog + ", " + vok + ", " + client_id + ", " + as_id +")";
         conn.createStatement().executeUpdate(query4);
     }
 
-    public static void InsertClientAndBookingAndEntry(Connection conn, int passportSeries, int passportNumber, String name, String surname, String patronymic, Date birthday, String telephone, int number, Date settling, Date eviction, int vog, int vok) throws SQLException {
+    public static void InsertClientAndBookingAndEntry(Connection conn, int passportSeries, int passportNumber, String name, String surname, String patronymic, Date birthday, String telephone, int apartment_id, Date settling, Date eviction, int vog, int vok) throws SQLException {
         String query1 = "INSERT INTO courseprojectschema.Client (passport_series, passport_number, name, surname, patronymic, birthday, tel_number) VALUES (" + passportSeries + ", " + passportNumber + ", \'" + name + "\', \'" + surname + "\', \'" + patronymic + "\', \'" + birthday + "\', \'" + telephone + "\')";
         conn.createStatement().executeUpdate(query1);
         String query2 = "select @@IDENTITY";
         ResultSet set1 = conn.createStatement().executeQuery(query2);
+        set1.next();
         int client_id = set1.getInt(1);
-        String query3 = "INSERT INTO courseprojectschema.Booking (number, settling, eviction, value_of_guests, value_of_kids, client_id, as_id) VALUES ('" + number + "', \'" + settling + "\', \'" + eviction + "\', '" + vog + "', '" + vok + "', '" + client_id + ")";
+        String query3 = "INSERT INTO courseprojectschema.Booking (apartment_id, settling, eviction, value_of_guests, value_of_kids, client_id) VALUES ('" + apartment_id + "', \'" + settling + "\', \'" + eviction + "\', " + vog + ", " + vok + ", " + client_id + ")";
         conn.createStatement().executeUpdate(query3);
     }
 
@@ -338,11 +355,12 @@ public class RequestsSQL {
         conn.createStatement().executeUpdate(query);
     }
 
-    public static void InsertLivingEntry(Connection conn, int number, Date settling, Date eviction, int vog, int vok, int client_id) throws SQLException {
+    public static void InsertLivingEntry(Connection conn, int client_id, int number, Date settling, Date eviction, int vog, int vok) throws SQLException {
         String query1 = "INSERT INTO courseprojectschema.Additional_services (mini_bar, clothes_washing, telephone, intercity_telephone, food) VALUES (0, 0, 0, 0, 0)";
         conn.createStatement().executeUpdate(query1);
         String query2 = "select @@IDENTITY";
         ResultSet set = conn.createStatement().executeQuery(query2);
+        set.next();
         int as_id = set.getInt(1);
         String query3 = "INSERT INTO courseprojectschema.Living (number, settling, eviction, value_of_guests, value_of_kids, client_id, as_id) VALUES ('" + number + "', \'" + settling + "\', \'" + eviction + "\', '" + vog + "', '" + vok + "', '" + client_id + "', '" + as_id +"')";
         conn.createStatement().executeUpdate(query3);
@@ -358,8 +376,8 @@ public class RequestsSQL {
         conn.createStatement().executeUpdate(query);
     }
 
-    public static void InsertBookingEntry(Connection conn, int number, Date settling, Date eviction, int vog, int vok, int client_id) throws SQLException {
-        String query = "INSERT INTO courseprojectschema.Booking (number, settling, eviction, value_of_guests, value_of_kids, client_id) VALUES ('" + number + "', \'" + settling + "\', \'" + eviction + "\', '" + vog + "', '" + vok + "', '" + client_id + "')";
+    public static void InsertBookingEntry(Connection conn, int client_id, int apartment_id, Date settling, Date eviction, int vog, int vok) throws SQLException {
+        String query = "INSERT INTO courseprojectschema.Booking (apartment_id, settling, eviction, value_of_guests, value_of_kids, client_id) VALUES ('" + apartment_id + "', \'" + settling + "\', \'" + eviction + "\', '" + vog + "', '" + vok + "', '" + client_id + "')";
         conn.createStatement().executeUpdate(query);
     }
 

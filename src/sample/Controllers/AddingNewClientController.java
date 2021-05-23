@@ -115,31 +115,104 @@ public class AddingNewClientController {
     }
 
     public void OnCreateNewBooking(ActionEvent actionEvent) {
-        if(InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
-                InputValidation.CheckLenthOfPassportNumber(anCustomerPassportNumberTF.getText()) &&
-                InputValidation.isRowConsistsOfNumbers(anCustomerPassportNumberTF.getText()) &&
-                InputValidation.CheckLenthOfPassportSeries(anCustomerPassportsSeriesTF.getText()) &&
-                InputValidation.isRowConsistsOfLetters(anCustomerNameTF.getText()) &&
-                InputValidation.isRowConsistsOfLetters(anCustomerSurnameTF.getText()) &&
-                InputValidation.isRowConsistsOfLetters(anCustomerPatronymicTF.getText()) &&
-                InputValidation.isRowConsistsOfLetters(anCustomerTelephoneTF.getText()) &&
-                anCustomerBirthdayDP.getValue().isBefore(LocalDate.now())
+        // Тут поверх всего проверить текстовые поля на ""
+        if(!anCustomerPassportsSeriesTF.getText().equals("") &&
+                !anCustomerPassportNumberTF.getText().equals("") &&
+                !anCustomerNameTF.getText().equals("") &&
+                !anCustomerSurnameTF.getText().equals("") &&
+                !anCustomerPatronymicTF.getText().equals("") &&
+                anCustomerBirthdayDP.getValue() != null &&
+                !anCustomerTelephoneTF.getText().equals("")
         ) {
-            if(InputValidation.isRowConsistsOfLetters(anCustomerGuestsTF.getText()) &&
-                    InputValidation.isRowConsistsOfLetters(anCustomerKidsTF.getText()) &&
-                    anCustomerSettlingDP.getValue().isAfter(LocalDate.now()) &&
-                    anCustomerBirthdayDP.getValue().isAfter(LocalDate.now())
+            if(InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
+                    InputValidation.CheckLenthOfPassportNumber(anCustomerPassportNumberTF.getText()) &&
+                    InputValidation.isRowConsistsOfNumbers(anCustomerPassportNumberTF.getText()) &&
+                    InputValidation.CheckLenthOfPassportSeries(anCustomerPassportsSeriesTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(anCustomerNameTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(anCustomerSurnameTF.getText()) &&
+                    InputValidation.isRowConsistsOfLetters(anCustomerPatronymicTF.getText()) &&
+                    InputValidation.isRowConsistsOfNumbers(anCustomerTelephoneTF.getText()) &&
+                    anCustomerBirthdayDP.getValue().isBefore(LocalDate.now())
             ) {
-                if(true) { // ТУТ ДОПИСАТЬ SQL-ВАЛИДАЦИЮ
-////////////////////////////////////////////////////////////////////////////////////////////
+                if(InputValidation.isRowConsistsOfNumbers(anCustomerGuestsTF.getText()) &&
+                        InputValidation.isRowConsistsOfNumbers(anCustomerKidsTF.getText()) &&
+                        anCustomerSettlingDP.getValue().isAfter(LocalDate.now()) &&
+                        anCustomerEvictionDP.getValue().isAfter(LocalDate.now())
+                ) {
+                    if(selectedApartment != null) {
+                        // SQL-ВАЛИДАЦИЯ
+                        try(Connection connection = dH.getConnection()) {
+                            Boolean numberIsFreeForTheDate = RequestsSQL.IsNumberFreeForSetDate(
+                                    connection,
+                                    Date.valueOf(anCustomerSettlingDP.getValue()),
+                                    Date.valueOf(anCustomerEvictionDP.getValue()),
+                                    selectedApartment.getApartment_id()
+                            );
+                            if(numberIsFreeForTheDate == true) {
+                                try {
+                                    Integer clientIdByViewData = RequestsSQL.SelectNthIdFromClientWherePassportDataDefinedToString__ALTERNATIVE__(
+                                            connection,
+                                            Integer.parseInt(anCustomerPassportsSeriesTF.getText()),
+                                            Integer.parseInt(anCustomerPassportNumberTF.getText())
+                                    );
+                                    if (clientIdByViewData != -1) {
+                                        //Место для добавления нового клиета и проживания или бронирования к нему
+                                        RequestsSQL.InsertBookingEntry(
+                                                connection,
+                                                clientIdByViewData,
+                                                selectedApartment.getApartment_id(),
+                                                Date.valueOf(anCustomerSettlingDP.getValue()),
+                                                Date.valueOf(anCustomerEvictionDP.getValue()),
+                                                Integer.parseInt(anCustomerGuestsTF.getText()),
+                                                Integer.parseInt(anCustomerKidsTF.getText())
+
+                                        );
+                                    }
+                                    else {
+                                        Integer clientsActualBookingsAndLivings = RequestsSQL.ValueOfClientLivingsAndBookingsForToday(connection, addableСlient.getClient_id());
+                                        if(clientsActualBookingsAndLivings <= 5) {
+                                            RequestsSQL.InsertClientAndBookingAndEntry(
+                                                    connection,
+                                                    Integer.parseInt(anCustomerPassportsSeriesTF.getText()),
+                                                    Integer.parseInt(anCustomerPassportNumberTF.getText()),
+                                                    anCustomerNameTF.getText(),
+                                                    anCustomerSurnameTF.getText(),
+                                                    anCustomerPatronymicTF.getText(),
+                                                    Date.valueOf(anCustomerBirthdayDP.getValue()),
+                                                    anCustomerTelephoneTF.getText(),
+                                                    selectedApartment.getApartment_id(),
+                                                    Date.valueOf(anCustomerSettlingDP.getValue()),
+                                                    Date.valueOf(anCustomerEvictionDP.getValue()),
+                                                    Integer.parseInt(anCustomerGuestsTF.getText()),
+                                                    Integer.parseInt(anCustomerKidsTF.getText())
+                                            );
+                                        }
+                                    }
+                                }
+                                catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                Alerts.showWarningAlert("Невозможно создать бронь!", "Номер уже занят на эту дату", "");
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else {
+                        Alerts.showWarningAlert("Номер не был выбран!", "Для создания брони необходимо выбрать номер из таблицы", "");
+                    }
+                }
+                else {
+                    Alerts.showWarningAlert("Неверный формат данных!", "Данные бронирования имеют неверный формат", "");
                 }
             }
             else {
-                Alerts.showWarningAlert("Неверный формат данных!", "Данные бронирования имеют неверный формат", "");
+                Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
             }
         }
         else {
-            Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
+            Alerts.showWarningAlert("Не все данные клинта были указаны!", "Все данные клиента обязательны к заполнению", "");
         }
     }
 

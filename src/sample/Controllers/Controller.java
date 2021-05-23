@@ -127,10 +127,14 @@ public class Controller implements Initializable {
         }
     }
     public void OnRegisterNewClient(ActionEvent actionEvent) {
-        if(clientPassportSeriesTF.getText().equals("") || clientPassportNumberTF.getText().equals("") || //Если все поля основной формы заполнены, то передаём данные из полей на форму добавления
-        clientNameTF.getText().equals("") || clientSurnameTF.getText().equals("") ||
-        clientPatronymicTF.getText().equals("") || clientBirthdayDP.getValue() == null || clientTelephoneTF.getText().equals("")) {
-//            Alerts.showInformationAlert("Предупреждение", "Регистрация клиента:", "Не все поля были заполнены");
+        if(clientPassportSeriesTF.getText().equals("") ||
+                clientPassportNumberTF.getText().equals("") || //Если все поля основной формы заполнены, то передаём данные из полей на форму добавления
+                clientNameTF.getText().equals("") ||
+                clientSurnameTF.getText().equals("") ||
+                clientPatronymicTF.getText().equals("") ||
+                clientBirthdayDP.getValue() == null ||
+                clientTelephoneTF.getText().equals("")
+        ) {
             Client client = new Client();
             ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
             try {
