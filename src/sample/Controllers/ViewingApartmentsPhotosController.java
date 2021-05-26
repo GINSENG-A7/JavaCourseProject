@@ -30,8 +30,10 @@ public class ViewingApartmentsPhotosController {
     public ImageView vaPhotosImageView;
     public Image displayedImage;
     private Integer idOfSelectedApartment;
-    private List<Image> listOfImages;
+//    private List<Image> listOfImages;
     private List<Photos> listOfPhotos;
+    private Photos currentPhoto;
+    private Integer indexOfCurrentImage = 0;
     DbHandler dH = DbHandler.getDbHandler();
 
     public Integer getIdOfSelectedApartment() {
@@ -42,10 +44,11 @@ public class ViewingApartmentsPhotosController {
 
         try(Connection connection = dH.getConnection()) {
             listOfPhotos = new ArrayList<Photos>(RequestsSQL.CollectImagesByApartmentId(connection, idOfSelectedApartment));
-            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(0).getPath()));
+            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         }
+        centerImage();
     }
 
     @FXML
@@ -74,7 +77,7 @@ public class ViewingApartmentsPhotosController {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
         List<File> file = fileChooser.showOpenMultipleDialog(dialogStage);
         if (!file.isEmpty()) {
-            List<Image> resultImages = null;
+            List<Image> resultImages = new ArrayList<Image>();
             for(int i = 0; i < file.size(); i++) {
                 BufferedImage image = ImageIO.read(file.get(i));
                 resultImages.add(SwingFXUtils.toFXImage(image, null ));
@@ -84,15 +87,62 @@ public class ViewingApartmentsPhotosController {
         return null;
     }
 
-    public void OnPreviousPicture(ActionEvent actionEvent) {
-    }
-
     public void OnDeletePicture(ActionEvent actionEvent) {
     }
 
     public void OnAddPicture(ActionEvent actionEvent) {
     }
 
-    public void OnNextPicture(ActionEvent actionEvent) {
+    public void OnPreviousPicture(ActionEvent actionEvent) throws IOException {
+        indexOfCurrentImage = indexOfCurrentImage - 1;
+        if(indexOfCurrentImage >= 0) {
+            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+            currentPhoto = listOfPhotos.get(indexOfCurrentImage);
+        }
+        else {
+            indexOfCurrentImage = listOfPhotos.size() - 1;
+            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+            currentPhoto = listOfPhotos.get(indexOfCurrentImage);
+        }
+        centerImage();
+    }
+
+    public void OnNextPicture(ActionEvent actionEvent) throws IOException {
+        indexOfCurrentImage = indexOfCurrentImage + 1;
+        if(indexOfCurrentImage < listOfPhotos.size()) {
+            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+            currentPhoto = listOfPhotos.get(indexOfCurrentImage);
+        }
+        else {
+            indexOfCurrentImage = 0;
+            vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+            currentPhoto = listOfPhotos.get(indexOfCurrentImage);
+        }
+        centerImage();
+    }
+
+    public void centerImage() {
+        Image img = vaPhotosImageView.getImage();
+        if (img != null) {
+            double w = 0;
+            double h = 0;
+
+            double ratioX = vaPhotosImageView.getFitWidth() / img.getWidth();
+            double ratioY = vaPhotosImageView.getFitHeight() / img.getHeight();
+
+            double reducCoeff = 0;
+            if(ratioX >= ratioY) {
+                reducCoeff = ratioY;
+            } else {
+                reducCoeff = ratioX;
+            }
+
+            w = img.getWidth() * reducCoeff;
+            h = img.getHeight() * reducCoeff;
+
+            vaPhotosImageView.setX((vaPhotosImageView.getFitWidth() - w) / 2);
+            vaPhotosImageView.setY((vaPhotosImageView.getFitHeight() - h) / 2);
+
+        }
     }
 }
