@@ -1,9 +1,13 @@
 package sample;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import sample.Models.Photos;
 import sample.Models.PseudoApartmentTypes;
 
+import java.awt.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,22 +71,20 @@ public class RequestsSQL {
     }
 
     //Тут получение листа картинок заданного номера. Пока не знаю как его правильно переписать =(
-/*    public static List<PictureData> CollectImagesOfNthNumber(SqlConnection connection, int nOA, List<PictureData> pList)
-    {
-        pList.Clear();
-        SqlCommand command = new SqlCommand($"SELECT photos_id, path FROM Photos WHERE number = {nOA}", connection);
-        command.CommandType = CommandType.Text;
-        SqlDataReader reader = command.ExecuteReader();
-        if (reader.HasRows)
-        {
-            while (reader.Read())
-            {
-                pList.Add(new PictureData() { id = Convert.ToInt32(reader.GetValue(0)), path = reader.GetValue(1).ToString()});
-            }
+    public static java.util.List<Photos> CollectImagesByApartmentId(Connection connection, int idOA) throws SQLException {
+        String query =  "SELECT photo_id, path, apartment_id FROM courseprojectschema.Photo WHERE apartment_id = " + idOA;
+        ResultSet set = connection.createStatement().executeQuery(query);
+        java.util.List<Photos> listOfImages = new ArrayList<Photos>();
+        while (set.next()) {
+            Photos localPhotos = new Photos(
+                    new SimpleIntegerProperty(set.getInt(1)),
+                    new SimpleStringProperty(set.getString(2)),
+                    new SimpleIntegerProperty(set.getInt(3))
+            );
+            listOfImages.add(localPhotos);
         }
-        reader.Close();
-        return pList;
-    }*/
+        return listOfImages;
+    }
 
     public static boolean SelectSetValueOfNumberFromApartments(Connection conn, int n) throws SQLException {
         String query = "SELECT DISTINCT number FROM courseprojectschema.Apartments WHERE number = " + n;

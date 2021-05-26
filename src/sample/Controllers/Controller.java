@@ -12,7 +12,9 @@ import javafx.scene.input.MouseEvent;
 import sample.Alerts;
 import sample.DbHandler;
 import sample.Dialogs.AddingNewClientDialog;
+import sample.Dialogs.AddingNewNumberDialog;
 import sample.Dialogs.EditingAdditionalServicesDialog;
+import sample.Dialogs.ViewingApartmentsPhotosDialog;
 import sample.InputValidation;
 import sample.Models.*;
 import sample.RequestsSQL;
@@ -518,6 +520,8 @@ public class Controller implements Initializable {
     }
 
     //TAB APARTMENTS
+    public ViewingApartmentsPhotosDialog vapDialog;
+    public AddingNewNumberDialog annDialog;
     public Tab apartmentsTab;
     public TextField apartmentsNumberTF;
     public ComboBox apartmentsTypeCB;
@@ -529,6 +533,7 @@ public class Controller implements Initializable {
     public TableColumn<Apartments, Integer> apartmentsNumberColumn;
     public TableColumn<Apartments, String> apartmentsTypeColumn;
     public TableColumn<Apartments, Integer> apartmentsPriceColumn;
+    private Integer idOfSelectedApartment;
     private ObservableList<Apartments> apartmentsOList = FXCollections.observableArrayList();
 
     public void fillApartmentsTableView(ResultSet localResultSet) throws SQLException {
@@ -561,6 +566,7 @@ public class Controller implements Initializable {
     public void getApartmentsEntryData() {
         if (apartmentsTableView.getSelectionModel().getSelectedItem() != null) {
             Apartments selectedApartments = apartmentsTableView.getSelectionModel().getSelectedItem();
+            idOfSelectedApartment = selectedApartments.getApartment_id();
             apartmentsNumberTF.setText(String.valueOf(selectedApartments.getNumber()));
             apartmentsTypeCB.setValue(selectedApartments.getType());
             apartmentsPriceTF.setText(String.valueOf(selectedApartments.getType()));
@@ -571,7 +577,9 @@ public class Controller implements Initializable {
     public void OnChangeDiscount(ActionEvent actionEvent) {
     }
 
-    public void OnAddNewApartment(ActionEvent actionEvent) {
+    public void OnAddNewApartment(ActionEvent actionEvent) throws IOException {
+        annDialog = new AddingNewNumberDialog(false, "Views/AddingNewNumber.fxml", "Добавление нового номера", idOfSelectedApartment);
+        annDialog.ShowDefaultDialog();
     }
 
     public void OnDeleteApartmentData(ActionEvent actionEvent) {
@@ -580,6 +588,13 @@ public class Controller implements Initializable {
     public void OnChangeApartmentData(ActionEvent actionEvent) {
     }
 
-    public void OnViewPhotosOfApartment(ActionEvent actionEvent) {
+    public void OnViewPhotosOfApartment(ActionEvent actionEvent) throws IOException {
+        if(idOfSelectedApartment != null) {
+            vapDialog = new ViewingApartmentsPhotosDialog(false, "Views/ViewingApartmentsPhotos.fxml", "", idOfSelectedApartment);
+            vapDialog.ShowDefaultDialog();
+        }
+        else {
+            Alerts.showWarningAlert("Внимание!", "Номер не выбран", "Необходимо выбрать номер для отображения его фотографий");
+        }
     }
 }

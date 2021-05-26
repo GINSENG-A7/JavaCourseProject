@@ -40,6 +40,10 @@ public class EditingAdditionalServicesDialog {
         editingAdditionalServicesStage.setTitle(windowTitle);
         editingAdditionalServicesStage.initModality(Modality.WINDOW_MODAL);
         editingAdditionalServicesStage.initOwner(Main.getMainStage());
+        editingAdditionalServicesStage.setMinWidth(344);
+        editingAdditionalServicesStage.setMinHeight(254);
+        editingAdditionalServicesStage.setMaxWidth(344);
+        editingAdditionalServicesStage.setMaxHeight(254);
         Scene scene = new Scene(page);
         editingAdditionalServicesStage.setScene(scene);
         EditingAdditionalServicesController controller = loader.getController();
@@ -47,12 +51,6 @@ public class EditingAdditionalServicesDialog {
         if(this.additionalServices != null) {
             controller.setRelatedAS(additionalServices);
         }
-//        if(this.bookingId == null) {
-//            controller.setAddableClient(this.client);
-//        }
-//        else {
-//            controller.setAddableClientWithBooking(this.client, this.bookingId);
-//        }
         editingAdditionalServicesStage.showAndWait();
     }
 }

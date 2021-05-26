@@ -23,67 +23,64 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <TextField fx:id="anCustomerPassportsSeriesTF" layoutX="822.0" layoutY="39.0" />
-      <Label layoutX="790.0" layoutY="14.0" text="Данные о клиенте" underline="true">
+      <TextField fx:id="anCustomerPassportsSeriesTF" layoutX="822.0" layoutY="39.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="39.0" />
+      <Label layoutX="790.0" layoutY="14.0" text="Данные о клиенте" underline="true" AnchorPane.rightAnchor="86.0" AnchorPane.topAnchor="14.0">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Label layoutX="707.0" layoutY="43.0" text="Серия паспорта" />
-      <TextField fx:id="anCustomerPassportNumberTF" layoutX="822.0" layoutY="70.0" />
-      <TextField fx:id="anCustomerNameTF" layoutX="822.0" layoutY="101.0" />
-      <TextField fx:id="anCustomerSurnameTF" layoutX="822.0" layoutY="132.0" />
-      <TextField fx:id="anCustomerPatronymicTF" layoutX="822.0" layoutY="164.0" />
-      <TextField layoutX="822.0" layoutY="195.0" />
-      <TextField fx:id="anCustomerTelephoneTF" layoutX="822.0" layoutY="227.0" />
-      <Label layoutX="707.0" layoutY="74.0" text="Номер паспорта" />
-      <Label layoutX="707.0" layoutY="105.0" text="Имя" />
-      <Label layoutX="707.0" layoutY="136.0" text="Фамилия" />
-      <Label layoutX="707.0" layoutY="168.0" text="Отчество" />
-      <Label layoutX="707.0" layoutY="199.0" text="Дата рождения" />
-      <Label layoutX="707.0" layoutY="231.0" text="Номер телефона" />
-      <Label layoutX="775.0" layoutY="258.0" text="Данные о проживании" underline="true">
+      <Label layoutX="707.0" layoutY="43.0" text="Серия паспорта" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="43.0" />
+      <TextField fx:id="anCustomerPassportNumberTF" layoutX="822.0" layoutY="70.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="70.0" />
+      <TextField fx:id="anCustomerNameTF" layoutX="822.0" layoutY="101.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="101.0" />
+      <TextField fx:id="anCustomerSurnameTF" layoutX="822.0" layoutY="132.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="132.0" />
+      <TextField fx:id="anCustomerPatronymicTF" layoutX="822.0" layoutY="164.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="164.0" />
+      <TextField fx:id="anCustomerTelephoneTF" layoutX="822.0" layoutY="227.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="227.0" />
+      <Label layoutX="707.0" layoutY="74.0" text="Номер паспорта" AnchorPane.rightAnchor="186.0" AnchorPane.topAnchor="74.0" />
+      <Label layoutX="707.0" layoutY="105.0" text="Имя" AnchorPane.rightAnchor="254.0" AnchorPane.topAnchor="105.0" />
+      <Label layoutX="707.0" layoutY="136.0" text="Фамилия" AnchorPane.rightAnchor="228.0" AnchorPane.topAnchor="136.0" />
+      <Label layoutX="707.0" layoutY="168.0" text="Отчество" AnchorPane.rightAnchor="227.0" AnchorPane.topAnchor="168.0" />
+      <Label layoutX="707.0" layoutY="199.0" text="Дата рождения" AnchorPane.rightAnchor="193.0" AnchorPane.topAnchor="199.0" />
+      <Label layoutX="707.0" layoutY="231.0" text="Номер телефона" AnchorPane.rightAnchor="185.0" AnchorPane.topAnchor="231.0" />
+      <Label layoutX="775.0" layoutY="258.0" text="Данные о проживании" underline="true" AnchorPane.rightAnchor="72.0" AnchorPane.topAnchor="258.0">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <TextField layoutX="822.0" layoutY="283.0" />
-      <Label layoutX="706.0" layoutY="287.0" text="Дата заезда" />
-      <TextField layoutX="822.0" layoutY="315.0" />
-      <Label layoutX="706.0" layoutY="319.0" text="Дата выезда" />
-      <TextField fx:id="anCustomerGuestsTF" layoutX="822.0" layoutY="346.0" />
-      <TextField fx:id="anCustomerKidsTF" layoutX="822.0" layoutY="377.0" />
-      <Label layoutX="706.0" layoutY="350.0" text="Количество гостей" />
-      <Label layoutX="706.0" layoutY="381.0" text="Количество детей" />
-      <Button layoutX="706.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnRegisterNewLiving" prefHeight="25.0" prefWidth="158.0" text="Регистрация проживания" />
-      <Button layoutX="868.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnCreateNewBooking" prefHeight="25.0" prefWidth="103.0" text="Забронировать" />
-      <DatePicker fx:id="anCustomerBirthdayDP" layoutX="822.0" layoutY="195.0" prefHeight="25.0" prefWidth="149.0" />
-      <DatePicker fx:id="anCustomerSettlingDP" layoutX="822.0" layoutY="283.0" prefHeight="25.0" prefWidth="149.0" />
-      <DatePicker fx:id="anCustomerEvictionDP" layoutX="822.0" layoutY="315.0" prefHeight="25.0" prefWidth="149.0" />
-      <Label layoutX="173.0" layoutY="321.0" text="Фильтры" underline="true">
+      <Label layoutX="706.0" layoutY="287.0" text="Дата заезда" AnchorPane.rightAnchor="214.0" AnchorPane.topAnchor="287.0" />
+      <Label layoutX="706.0" layoutY="319.0" text="Дата выезда" AnchorPane.rightAnchor="211.0" AnchorPane.topAnchor="319.0" />
+      <TextField fx:id="anCustomerGuestsTF" layoutX="822.0" layoutY="346.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="346.0" />
+      <TextField fx:id="anCustomerKidsTF" layoutX="822.0" layoutY="377.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="377.0" />
+      <Label layoutX="706.0" layoutY="350.0" text="Количество гостей" AnchorPane.rightAnchor="176.0" AnchorPane.topAnchor="350.0" />
+      <Label layoutX="706.0" layoutY="381.0" text="Количество детей" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="381.0" />
+      <Button layoutX="706.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnRegisterNewLiving" prefHeight="25.0" prefWidth="158.0" text="Регистрация проживания" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="418.0" />
+      <Button layoutX="868.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnCreateNewBooking" prefHeight="25.0" prefWidth="103.0" text="Забронировать" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="418.0" />
+      <DatePicker fx:id="anCustomerBirthdayDP" layoutX="822.0" layoutY="195.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="195.0" />
+      <DatePicker fx:id="anCustomerSettlingDP" layoutX="822.0" layoutY="283.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="283.0" />
+      <DatePicker fx:id="anCustomerEvictionDP" layoutX="822.0" layoutY="315.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="315.0" />
+      <Label layoutX="173.0" layoutY="321.0" text="Фильтры" underline="true" AnchorPane.bottomAnchor="117.0" AnchorPane.leftAnchor="173.0">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Label layoutX="18.0" layoutY="350.0" text="C" />
-      <Label layoutX="196.0" layoutY="350.0" text="до" />
-      <DatePicker fx:id="anCustomerSettlingFilterDP" layoutX="40.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" />
-      <DatePicker fx:id="anCustomerEvictionFilterDP" layoutX="218.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" />
-      <Label layoutX="18.0" layoutY="381.0" text="От" />
-      <Label layoutX="196.0" layoutY="381.0" text="до" />
-      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0" />
-      <TextField fx:id="anCustomerBottomPriceFilterTF" layoutX="40.0" layoutY="377.0" />
-      <ComboBox fx:id="anCustomerApartmentTypeCB" layoutX="100.0" layoutY="413.0" prefHeight="25.0" prefWidth="120.0" />
-      <Label layoutX="19.0" layoutY="417.0" text="Тип номера" />
-      <Button layoutX="229.0" layoutY="413.0" mnemonicParsing="false" onAction="#OnApplyFilters" prefHeight="25.0" prefWidth="138.0" text="Применить фильтры" />
-      <Label layoutX="483.0" layoutY="321.0" text="Итоговая стоимость" underline="true">
+      <Label layoutX="18.0" layoutY="350.0" text="C" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="18.0" />
+      <Label layoutX="196.0" layoutY="350.0" text="до" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="196.0" />
+      <DatePicker fx:id="anCustomerSettlingFilterDP" layoutX="40.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.bottomAnchor="86.0" AnchorPane.leftAnchor="40.0" />
+      <DatePicker fx:id="anCustomerEvictionFilterDP" layoutX="218.0" layoutY="346.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.bottomAnchor="86.0" AnchorPane.leftAnchor="218.0" />
+      <Label layoutX="18.0" layoutY="381.0" text="От" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="18.0" />
+      <Label layoutX="196.0" layoutY="381.0" text="до" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="196.0" />
+      <TextField fx:id="anCustomerTopPriceFilterTF" layoutX="218.0" layoutY="377.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="218.0" />
+      <TextField fx:id="anCustomerBottomPriceFilterTF" layoutX="40.0" layoutY="377.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="40.0" />
+      <ComboBox fx:id="anCustomerApartmentTypeCB" layoutX="100.0" layoutY="413.0" prefHeight="25.0" prefWidth="120.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="100.0" />
+      <Label layoutX="19.0" layoutY="417.0" text="Тип номера" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="19.0" />
+      <Button layoutX="229.0" layoutY="413.0" mnemonicParsing="false" onAction="#OnApplyFilters" prefHeight="25.0" prefWidth="138.0" text="Применить фильтры" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="229.0" />
+      <Label layoutX="483.0" layoutY="321.0" text="Итоговая стоимость" underline="true" AnchorPane.bottomAnchor="117.0" AnchorPane.leftAnchor="483.0">
          <font>
             <Font size="13.0" />
          </font>
       </Label>
-      <Label layoutX="391.0" layoutY="364.0" text="Скидка за ребёнка (%)" />
-      <Label layoutX="391.0" layoutY="399.0" text="Итого:" />
-      <TextField fx:id="anCustomerDiscountTF" layoutX="532.0" layoutY="360.0" prefHeight="25.0" prefWidth="164.0" />
-      <TextField fx:id="anCustomerResultPriceTF" layoutX="532.0" layoutY="395.0" prefHeight="25.0" prefWidth="164.0" />
+      <Label layoutX="391.0" layoutY="364.0" text="Скидка за ребёнка (%)" AnchorPane.bottomAnchor="76.0" AnchorPane.leftAnchor="391.0" />
+      <Label layoutX="391.0" layoutY="399.0" text="Итого:" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="391.0" />
+      <TextField fx:id="anCustomerDiscountTF" layoutX="532.0" layoutY="360.0" prefHeight="25.0" prefWidth="164.0" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="532.0" />
+      <TextField fx:id="anCustomerResultPriceTF" layoutX="532.0" layoutY="395.0" prefHeight="25.0" prefWidth="164.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="532.0" />
    </children>
 </AnchorPane>

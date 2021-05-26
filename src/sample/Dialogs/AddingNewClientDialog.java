@@ -51,6 +51,8 @@ public class AddingNewClientDialog {
         addingNewClientStage.setTitle(windowTitle);
         addingNewClientStage.initModality(Modality.WINDOW_MODAL);
         addingNewClientStage.initOwner(Main.getMainStage());
+        addingNewClientStage.setMinWidth(1000);
+        addingNewClientStage.setMinHeight(500);
         Scene scene = new Scene(page);
         addingNewClientStage.setScene(scene);
         AddingNewClientController controller = loader.getController();

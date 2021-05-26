@@ -38,6 +38,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage){
+        this.mainStage = primaryStage;
         try
         {
             Parent root = FXMLLoader.load(getClass().getResource("Views/sample.fxml"));
