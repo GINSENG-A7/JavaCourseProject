@@ -395,14 +395,14 @@ public class RequestsSQL {
     }
 
     public static void ChangeApartmentsEntry(Connection conn, int apartmentId, int number, String type, int price) throws SQLException {
-        String query = "UPDATE courseprojectschema.Apartments SET apartment_id = " + number + " , \"type\" = \'" + type + "\', price = " + price + " WHERE apartmentId = " + apartmentId;
+        String query = "UPDATE courseprojectschema.Apartment SET apartment_id = " + number + " , \"type\" = \'" + type + "\', price = " + price + " WHERE apartmentId = " + apartmentId;
         conn.createStatement().executeUpdate(query);
     }
 
     public static void DeleteApartmentsEntry(Connection conn, int apartmentId) throws SQLException {
-        String query1 = "DELETE FROM courseprojectschema.Apartments WHERE apartment_id = " + apartmentId;
+        String query1 = "DELETE FROM courseprojectschema.Apartment WHERE apartment_id = " + apartmentId;
         conn.createStatement().executeUpdate(query1);
-        String query2 = "DELETE FROM courseprojectschema.Photos WHERE apartment_id = " + apartmentId;
+        String query2 = "DELETE FROM courseprojectschema.Photo WHERE apartment_id = " + apartmentId;
         conn.createStatement().executeUpdate(query2);
     }
 
@@ -418,7 +418,12 @@ public class RequestsSQL {
     }
 
     public static void InsertPhotoEntry(Connection conn, String path, int apartmentId) throws SQLException {
-        String query = "INSERT INTO courseprojectschema.Photos (path, number) VALUES (\'" + path + "\', " + apartmentId + ")";
+        String query = "INSERT INTO courseprojectschema.Photo (path, apartment_id) VALUES (\'" + path + "\', " + apartmentId + ")";
+        conn.createStatement().executeUpdate(query);
+    }
+
+    public static void DeletePhotoEntry(Connection conn, int apartmentId) throws SQLException {
+        String query = "DELETE FROM courseprojectschema.Photo WHERE photo_id = " + apartmentId;
         conn.createStatement().executeUpdate(query);
     }
 }
