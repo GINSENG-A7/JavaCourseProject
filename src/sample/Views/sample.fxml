@@ -41,7 +41,7 @@
                             <Button layoutX="218.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeClientData" prefHeight="25.0" prefWidth="246.0" text="Изменить данные выбранного клиента" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="218.0" />
                         <TableView fx:id="clientsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedClientsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                           <columns>
-                            <TableColumn fx:id="clientIdColumn" prefWidth="75.0" text="id" />
+                            <TableColumn fx:id="clientIdColumn" prefWidth="75.0" text="id" visible="false" />
                             <TableColumn fx:id="clientPassportSeriesColumn" prefWidth="75.0" text="Серия паспорта" />
                               <TableColumn fx:id="clientPassportNumberColumn" prefWidth="75.0" text="Номер паспорта" />
                               <TableColumn fx:id="clientNameColumn" prefWidth="75.0" text="Имя" />
@@ -74,8 +74,8 @@
                         <Button layoutX="237.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnChangeLivingData" prefHeight="25.0" prefWidth="261.0" text="Изменить данные выбранного проживания" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="237.0" />
                         <TableView fx:id="livingsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedLivingsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn fx:id="livingIdColumn" prefWidth="75.0" text="living_id" />
-                              <TableColumn fx:id="livingClientIdColumn" prefWidth="75.0" text="client_id" />
+                              <TableColumn fx:id="livingIdColumn" prefWidth="75.0" text="living_id" visible="false" />
+                              <TableColumn fx:id="livingClientIdColumn" prefWidth="75.0" text="client_id" visible="false" />
                               <TableColumn fx:id="livingClientNameColumn" prefWidth="75.0" text="Имя" />
                               <TableColumn fx:id="livingClientSurnameColumn" prefWidth="75.0" text="Фамилия" />
                               <TableColumn fx:id="livingClientPatronymicColumn" prefWidth="75.0" text="Отчество" />
@@ -84,8 +84,8 @@
                               <TableColumn fx:id="livingApartmentNumberColumn" prefWidth="75.0" text="Номер" />
                               <TableColumn fx:id="livingGuestsValueColumn" prefWidth="75.0" text="Количество взрослых" />
                               <TableColumn fx:id="livingKidsValueColumn" prefWidth="75.0" text="Количество детей" />
-                              <TableColumn fx:id="livingApartmentIdColumn" prefWidth="75.0" text="apartment_id" />
-                              <TableColumn fx:id="livingASIdColumn" prefWidth="75.0" text="as_id" />
+                              <TableColumn fx:id="livingApartmentIdColumn" prefWidth="75.0" text="apartment_id" visible="false" />
+                              <TableColumn fx:id="livingASIdColumn" prefWidth="75.0" text="as_id" visible="false" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -111,8 +111,8 @@
                         <CheckBox fx:id="IsBookingsDataIncludedToNextClientRegistration" layoutX="1018.0" layoutY="123.0" mnemonicParsing="false" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="123.0" />
                         <TableView fx:id="bookingTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedBookingsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn fx:id="bookingIdColumn" prefWidth="75.0" text="booking_id" />
-                              <TableColumn fx:id="bookingClientIdColumn" prefWidth="75.0" text="client_id" />
+                              <TableColumn fx:id="bookingIdColumn" prefWidth="75.0" text="booking_id" visible="false" />
+                              <TableColumn fx:id="bookingClientIdColumn" prefWidth="75.0" text="client_id" visible="false" />
                               <TableColumn fx:id="bookingClientNameColumn" prefWidth="75.0" text="Имя" />
                               <TableColumn fx:id="bookingClientSurnameColumn" prefWidth="75.0" text="Фамилия" />
                               <TableColumn fx:id="bookingClientPatronymicColumn" prefWidth="75.0" text="Отчество" />
@@ -121,7 +121,7 @@
                               <TableColumn fx:id="bookingApartmentNumberColumn" prefWidth="75.0" text="Номер" />
                               <TableColumn fx:id="bookingGuestsValueColumn" prefWidth="75.0" text="Количество взрослых" />
                               <TableColumn fx:id="bookingKidsValueColumn" prefWidth="75.0" text="Количество детей" />
-                              <TableColumn fx:id="bookingApartmentIdColumn" prefWidth="75.0" text="apartment_id" />
+                              <TableColumn fx:id="bookingApartmentIdColumn" prefWidth="75.0" text="apartment_id" visible="false" />
                            </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -152,7 +152,7 @@
                         <Button layoutX="442.0" layoutY="421.0" mnemonicParsing="false" onAction="#OnViewPhotosOfApartment" prefHeight="25.0" prefWidth="165.0" text="Фото выбранного номера" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="442.0" />
                         <TableView fx:id="apartmentsTableView" layoutX="15.0" layoutY="14.0" onMouseClicked="#OnClickedApartmentsTableView" prefHeight="400.0" prefWidth="727.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="306.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn fx:id="apartmentsIdColumn" prefWidth="75.0" text="id" />
+                              <TableColumn fx:id="apartmentsIdColumn" prefWidth="75.0" text="id" visible="false" />
                               <TableColumn fx:id="apartmentsNumberColumn" prefWidth="75.0" text="Числовое обозначение" />
                               <TableColumn fx:id="apartmentsTypeColumn" prefWidth="75.0" text="Тип" />
                               <TableColumn fx:id="apartmentsPriceColumn" prefWidth="75.0" text="Стоимость суток за человека" />

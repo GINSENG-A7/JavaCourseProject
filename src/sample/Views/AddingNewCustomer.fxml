@@ -14,7 +14,7 @@
    <children>
       <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" onMouseClicked="#OnClickedAddingNewClientTableView" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
         <columns>
-          <TableColumn fx:id="anCustomerApartmentIdColumn" prefWidth="75.0" text="id" />
+          <TableColumn fx:id="anCustomerApartmentIdColumn" prefWidth="75.0" text="id" visible="false" />
           <TableColumn fx:id="anCustomerApartmentNumberColumn" prefWidth="75.0" text="Численное обозначение" />
           <TableColumn fx:id="anCustomerApartmentTypeColumn" prefWidth="75.0" text="Тип" />
           <TableColumn fx:id="anCustomerApartmentPriceColumn" prefWidth="75.0" text="Стоимость суток с человека" />

@@ -38,10 +38,10 @@ public class ViewingApartmentsPhotosDialog {
         viewingApartmentsPhotosStage.setTitle(windowTitle);
         viewingApartmentsPhotosStage.initModality(Modality.WINDOW_MODAL);
         viewingApartmentsPhotosStage.initOwner(Main.getMainStage());
-//        editingAdditionalServicesStage.setMinWidth(344);
-//        editingAdditionalServicesStage.setMinHeight(254);
-//        editingAdditionalServicesStage.setMaxWidth(344);
-//        editingAdditionalServicesStage.setMaxHeight(254);
+        viewingApartmentsPhotosStage.setMinWidth(833);
+        viewingApartmentsPhotosStage.setMinHeight(527);
+        viewingApartmentsPhotosStage.setMaxWidth(833);
+        viewingApartmentsPhotosStage.setMaxHeight(527);
         Scene scene = new Scene(page);
         viewingApartmentsPhotosStage.setScene(scene);
         ViewingApartmentsPhotosController controller = loader.getController();

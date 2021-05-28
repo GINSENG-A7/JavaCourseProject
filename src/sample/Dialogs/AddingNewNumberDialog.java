@@ -39,10 +39,8 @@ public class AddingNewNumberDialog {
         addingNewNumberStage.setTitle(windowTitle);
         addingNewNumberStage.initModality(Modality.WINDOW_MODAL);
         addingNewNumberStage.initOwner(Main.getMainStage());
-//        editingAdditionalServicesStage.setMinWidth(344);
-//        editingAdditionalServicesStage.setMinHeight(254);
-//        editingAdditionalServicesStage.setMaxWidth(344);
-//        editingAdditionalServicesStage.setMaxHeight(254);
+        addingNewNumberStage.setMinWidth(290);
+        addingNewNumberStage.setMinHeight(190);
         Scene scene = new Scene(page);
         addingNewNumberStage.setScene(scene);
         AddingNewNumberController controller = loader.getController();
