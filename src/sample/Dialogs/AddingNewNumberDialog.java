@@ -47,9 +47,6 @@ public class AddingNewNumberDialog {
         addingNewNumberStage.setScene(scene);
         AddingNewNumberController controller = loader.getController();
         controller.setDialogStage(addingNewNumberStage);
-        if(this.apartmentId != null) {
-
-        }
         addingNewNumberStage.showAndWait();
     }
 }

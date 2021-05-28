@@ -9,6 +9,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.Alerts;
 import sample.DbHandler;
+import sample.ImagesHandler;
 import sample.Models.Photos;
 import sample.RequestsSQL;
 
@@ -63,68 +64,11 @@ public class ViewingApartmentsPhotosController {
 //        }
     }
 
-    public Image SetImageByRelativePath(String relativePath) throws IOException {
-        File file = new File(relativePath);
-        BufferedImage image = ImageIO.read(file);
-        Image resultImage = SwingFXUtils.toFXImage(image, null );
-        return resultImage;
-    }
-
-    public List<File> OpenFileChooser() throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Image File");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
-        List<File> files = fileChooser.showOpenMultipleDialog(dialogStage);
-        return files;
-//        if (!file.isEmpty()) {
-//            List<Image> resultImages = new ArrayList<Image>();
-//            for(int i = 0; i < file.size(); i++) {
-//                BufferedImage image = ImageIO.read(file.get(i));
-//                resultImages.add(SwingFXUtils.toFXImage(image, null ));
-//            }
-//            return resultImages;
-//        }
-//        return null;
-    }
-
-    public List<File> CopyAbsoluteFilesToRelativeFiles(List<File> absoluteFiles) throws IOException {
-        List<File> relativeFiles = new ArrayList<File>();
-        for(int i = 0; i < absoluteFiles.size(); i++) {
-            Files.copy(absoluteFiles.get(i).toPath(), Path.of("./Photos/" + absoluteFiles.get(i).getName()));
-            relativeFiles.add(new File("./Photos/" + absoluteFiles.get(i).getName()));
-        }
-        return relativeFiles;
-    }
-
-    public List<Image> ConvertFilesToImages (List<File> files) throws IOException {
-        if (!files.isEmpty()) {
-            List<Image> resultImages = new ArrayList<Image>();
-            for(int i = 0; i < files.size(); i++) {
-                BufferedImage image = ImageIO.read(files.get(i));
-                resultImages.add(SwingFXUtils.toFXImage(image, null ));
-            }
-            return resultImages;
-        }
-        return null;
-    }
-
-    public String EscapeBackSlashes(String inputStr) { //Можно поменять на StringBuilder
-        char[]  inputStrAsChars = inputStr.toCharArray();
-        String resultStr = "";
-        for(int i = 0; i < inputStrAsChars.length; i++) {
-            if(inputStrAsChars[i] == '\\') {
-                resultStr = resultStr + '\\';
-            }
-            resultStr = resultStr + inputStrAsChars[i];
-        }
-        return resultStr;
-    }
-
     public void OnAddPicture(ActionEvent actionEvent) throws IOException {
-        List<File> addableFiles = new ArrayList<File>(CopyAbsoluteFilesToRelativeFiles(OpenFileChooser()));
+        List<File> addableFiles = new ArrayList<File>(ImagesHandler.CopyAbsoluteFilesToRelativeFiles(ImagesHandler.OpenFileChooser(dialogStage)));
         for(int i = 0; i < addableFiles.size(); i++) {
             try (Connection connection = dH.getConnection()) {
-                RequestsSQL.InsertPhotoEntry(connection, EscapeBackSlashes(addableFiles.get(i).getPath()), idOfSelectedApartment);
+                RequestsSQL.InsertPhotoEntry(connection, ImagesHandler.EscapeBackSlashes(addableFiles.get(i).getPath()), idOfSelectedApartment);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -151,11 +95,11 @@ public class ViewingApartmentsPhotosController {
         if(listOfPhotos.size() > 0) {
             indexOfCurrentImage = indexOfCurrentImage - 1;
             if (indexOfCurrentImage >= 0) {
-                vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+                vaPhotosImageView.setImage(ImagesHandler.SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
                 currentPhoto = listOfPhotos.get(indexOfCurrentImage);
             } else {
                 indexOfCurrentImage = listOfPhotos.size() - 1;
-                vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+                vaPhotosImageView.setImage(ImagesHandler.SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
                 currentPhoto = listOfPhotos.get(indexOfCurrentImage);
             }
             centerImage();
@@ -166,11 +110,11 @@ public class ViewingApartmentsPhotosController {
         if(listOfPhotos.size() > 0) {
             indexOfCurrentImage = indexOfCurrentImage + 1;
             if (indexOfCurrentImage < listOfPhotos.size()) {
-                vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+                vaPhotosImageView.setImage(ImagesHandler.SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
                 currentPhoto = listOfPhotos.get(indexOfCurrentImage);
             } else {
                 indexOfCurrentImage = 0;
-                vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+                vaPhotosImageView.setImage(ImagesHandler.SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
                 currentPhoto = listOfPhotos.get(indexOfCurrentImage);
             }
             centerImage();
@@ -181,7 +125,7 @@ public class ViewingApartmentsPhotosController {
         try (Connection connection = dH.getConnection()) {
             listOfPhotos = new ArrayList<Photos>(RequestsSQL.CollectImagesByApartmentId(connection, idOfSelectedApartment));
             if(listOfPhotos.size() > 0) {
-                vaPhotosImageView.setImage(SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
+                vaPhotosImageView.setImage(ImagesHandler.SetImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
             }
         } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();

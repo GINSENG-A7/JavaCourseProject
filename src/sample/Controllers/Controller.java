@@ -9,15 +9,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import sample.Alerts;
-import sample.DbHandler;
+import sample.*;
 import sample.Dialogs.AddingNewClientDialog;
 import sample.Dialogs.AddingNewNumberDialog;
 import sample.Dialogs.EditingAdditionalServicesDialog;
 import sample.Dialogs.ViewingApartmentsPhotosDialog;
-import sample.InputValidation;
 import sample.Models.*;
-import sample.RequestsSQL;
 
 import java.io.IOException;
 import java.net.URL;
@@ -95,6 +92,7 @@ public class Controller implements Initializable {
 
         try(Connection connection = dH.getConnection()) {
             apartmentsTypeCB.setItems(RequestsSQL.GetTypesOfApartments(connection));
+            discountCurrentValueL.setText(RequestsSQL.GetCurrentDiscount(connection).toString() + "%");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -569,12 +567,18 @@ public class Controller implements Initializable {
             idOfSelectedApartment = selectedApartments.getApartment_id();
             apartmentsNumberTF.setText(String.valueOf(selectedApartments.getNumber()));
             apartmentsTypeCB.setValue(selectedApartments.getType());
-            apartmentsPriceTF.setText(String.valueOf(selectedApartments.getType()));
+            apartmentsPriceTF.setText(String.valueOf(selectedApartments.getPrice()));
             TextField discountNewValueTF;
         }
     }
 
     public void OnChangeDiscount(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            RequestsSQL.SetNewDiscount(connection, Integer.parseInt(discountNewValueTF.getText()));
+            discountCurrentValueL.setText(RequestsSQL.GetCurrentDiscount(connection).toString() + "%");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void OnAddNewApartment(ActionEvent actionEvent) throws IOException {
@@ -583,9 +587,54 @@ public class Controller implements Initializable {
     }
 
     public void OnDeleteApartmentData(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            if(RequestsSQL.IsThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+                RequestsSQL.DeleteApartmentsEntry(
+                        connection,
+                        idOfSelectedApartment
+                );
+            }
+            else {
+                Alerts.showWarningAlert("Недопустимые данные номера!", "Номер с таким численным обозначением уже существует", "");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     public void OnChangeApartmentData(ActionEvent actionEvent) {
+        if(!apartmentsNumberTF.equals("") && apartmentsTypeCB != null && !apartmentsPriceTF.equals("")) {
+            if(InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText()) && InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText())) {
+                if(Integer.parseInt(apartmentsNumberTF.getText()) > 0 && Integer.parseInt(apartmentsNumberTF.getText()) > 0){
+                    //SQL-ВАЛИДАЦИЯ
+                    try(Connection connection = dH.getConnection()) {
+                        if(RequestsSQL.IsThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+                            RequestsSQL.ChangeApartmentsEntry(
+                                    connection,
+                                    idOfSelectedApartment,
+                                    Integer.parseInt(apartmentsNumberTF.getText()),
+                                    apartmentsTypeCB.getValue().toString(),
+                                    Integer.parseInt(apartmentsPriceTF.getText())
+                            );
+                        }
+                        else {
+                            Alerts.showWarningAlert("Недопустимые данные номера!", "Номер с таким численным обозначением уже существует", "");
+                        }
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+                else {
+                    Alerts.showWarningAlert("Недопустимые данные номера!", "Численное обозначение номера и стоимость проживания должны быть больше нуля", "");
+                }
+            }
+            else {
+                Alerts.showWarningAlert("Неверный формат данных!", "Данные номера имеют неверный формат", "");
+            }
+        }
+        else {
+            Alerts.showWarningAlert("Не все данные номера были указаны!", "Все данные номера обязательны к заполнению", "");
+        }
     }
 
     public void OnViewPhotosOfApartment(ActionEvent actionEvent) throws IOException {
