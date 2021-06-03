@@ -42,7 +42,7 @@ public class AddingNewClientDialog {
         this.bookingId = bookingId;
     }
 
-    public void ShowDefaultDialog() throws IOException
+    public void showDefaultDialog() throws IOException
     {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(viewFileName));

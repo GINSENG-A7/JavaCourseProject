@@ -30,7 +30,7 @@ public class ViewingApartmentsPhotosDialog {
         this.windowTitle = windowTitle;
     }
 
-    public void ShowDefaultDialog() throws IOException {
+    public void showDefaultDialog() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(viewFileName));
         Parent page = loader.load(); // Тут вызывается initialize

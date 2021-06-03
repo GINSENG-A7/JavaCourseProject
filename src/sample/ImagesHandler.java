@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ImagesHandler {
-    public static Image SetImageByRelativePath(String relativePath) throws IOException {
+    public static Image setImageByRelativePath(String relativePath) throws IOException {
         File file = new File(relativePath);
         BufferedImage image = ImageIO.read(file);
         Image resultImage = SwingFXUtils.toFXImage(image, null );
         return resultImage;
     }
 
-    public static List<File> OpenFileChooser(Stage stage) throws IOException {
+    public static List<File> openFileChooser(Stage stage) throws IOException {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Image File");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.bmp"));
@@ -30,7 +30,7 @@ public class ImagesHandler {
         return files;
     }
 
-    public static List<File> CopyAbsoluteFilesToRelativeFiles(List<File> absoluteFiles) {
+    public static List<File> copyAbsoluteFilesToRelativeFiles(List<File> absoluteFiles) {
         List<File> relativeFiles = new ArrayList<File>();
         for(int i = 0; i < absoluteFiles.size(); i++) {
             try {
@@ -43,7 +43,7 @@ public class ImagesHandler {
         return relativeFiles;
     }
 
-    public static List<Image> ConvertFilesToImages (List<File> files) throws IOException {
+    public static List<Image> convertFilesToImages (List<File> files) throws IOException {
         if (!files.isEmpty()) {
             List<Image> resultImages = new ArrayList<Image>();
             for(int i = 0; i < files.size(); i++) {
@@ -55,7 +55,7 @@ public class ImagesHandler {
         return null;
     }
 
-    public static String EscapeBackSlashes(String inputStr) { //Можно поменять на StringBuilder
+    public static String escapeBackSlashes(String inputStr) { //Можно поменять на StringBuilder
         char[]  inputStrAsChars = inputStr.toCharArray();
         String resultStr = "";
         for(int i = 0; i < inputStrAsChars.length; i++) {

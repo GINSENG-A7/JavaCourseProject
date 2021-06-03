@@ -12,7 +12,7 @@
 
 <AnchorPane prefHeight="457.0" prefWidth="985.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.AddingNewClientController">
    <children>
-      <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" onMouseClicked="#OnClickedAddingNewClientTableView" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
+      <TableView fx:id="anCustomerTableView" layoutX="14.0" layoutY="14.0" onMouseClicked="#onClickedAddingNewClientTableView" prefHeight="301.0" prefWidth="683.0" AnchorPane.bottomAnchor="142.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="288.0" AnchorPane.topAnchor="14.0">
         <columns>
           <TableColumn fx:id="anCustomerApartmentIdColumn" prefWidth="75.0" text="id" visible="false" />
           <TableColumn fx:id="anCustomerApartmentNumberColumn" prefWidth="75.0" text="Численное обозначение" />
@@ -52,8 +52,8 @@
       <TextField fx:id="anCustomerKidsTF" layoutX="822.0" layoutY="377.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="377.0" />
       <Label layoutX="706.0" layoutY="350.0" text="Количество гостей" AnchorPane.rightAnchor="176.0" AnchorPane.topAnchor="350.0" />
       <Label layoutX="706.0" layoutY="381.0" text="Количество детей" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="381.0" />
-      <Button layoutX="706.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnRegisterNewLiving" prefHeight="25.0" prefWidth="158.0" text="Регистрация проживания" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="418.0" />
-      <Button layoutX="868.0" layoutY="418.0" mnemonicParsing="false" onAction="#OnCreateNewBooking" prefHeight="25.0" prefWidth="103.0" text="Забронировать" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="418.0" />
+      <Button layoutX="706.0" layoutY="418.0" mnemonicParsing="false" onAction="#onRegisterNewLiving" prefHeight="25.0" prefWidth="158.0" text="Регистрация проживания" AnchorPane.rightAnchor="121.0" AnchorPane.topAnchor="418.0" />
+      <Button layoutX="868.0" layoutY="418.0" mnemonicParsing="false" onAction="#onCreateNewBooking" prefHeight="25.0" prefWidth="103.0" text="Забронировать" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="418.0" />
       <DatePicker fx:id="anCustomerBirthdayDP" layoutX="822.0" layoutY="195.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="195.0" />
       <DatePicker fx:id="anCustomerSettlingDP" layoutX="822.0" layoutY="283.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="283.0" />
       <DatePicker fx:id="anCustomerEvictionDP" layoutX="822.0" layoutY="315.0" prefHeight="25.0" prefWidth="149.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="315.0" />
@@ -72,7 +72,7 @@
       <TextField fx:id="anCustomerBottomPriceFilterTF" layoutX="40.0" layoutY="377.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="40.0" />
       <ComboBox fx:id="anCustomerApartmentTypeCB" layoutX="100.0" layoutY="413.0" prefHeight="25.0" prefWidth="120.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="100.0" />
       <Label layoutX="19.0" layoutY="417.0" text="Тип номера" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="19.0" />
-      <Button layoutX="229.0" layoutY="413.0" mnemonicParsing="false" onAction="#OnApplyFilters" prefHeight="25.0" prefWidth="138.0" text="Применить фильтры" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="229.0" />
+      <Button layoutX="229.0" layoutY="413.0" mnemonicParsing="false" onAction="#onApplyFilters" prefHeight="25.0" prefWidth="138.0" text="Применить фильтры" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="229.0" />
       <Label layoutX="483.0" layoutY="321.0" text="Итоговая стоимость" underline="true" AnchorPane.bottomAnchor="117.0" AnchorPane.leftAnchor="483.0">
          <font>
             <Font size="13.0" />

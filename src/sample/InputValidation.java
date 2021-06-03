@@ -47,7 +47,7 @@ public class InputValidation {
         }
     }
 
-    public static boolean CheckUniquenessObjectInToDataBase(String str, ArrayList<String> list){
+    public static boolean checkUniquenessObjectInToDataBase(String str, ArrayList<String> list){
         for (var item : list){
             if(item.equals(str)) {
                 return false;
@@ -55,7 +55,7 @@ public class InputValidation {
         }
         return  true;
     }
-    public static boolean CheckUniquenessObjectInToDataBase(String str,Integer id, ArrayList<String> list, ArrayList<Integer> idList){
+    public static boolean checkUniquenessObjectInToDataBase(String str,Integer id, ArrayList<String> list, ArrayList<Integer> idList){
         for (int i = 0; i < list.size(); i++) {
             if( (list.get(i).equals(str)) && !idList.get(i).equals(id)) {
                 return false;
@@ -64,21 +64,21 @@ public class InputValidation {
         return  true;
     }
 
-    public static boolean CheckLenthOfPassportSeries(String str) {
+    public static boolean checkLenthOfPassportSeries(String str) {
         if(str.length() == 4) {
             return true;
         }
         return false;
     }
 
-    public static boolean CheckLenthOfPassportNumber(String str) {
+    public static boolean checkLenthOfPassportNumber(String str) {
         if(str.length() == 6) {
             return true;
         }
         return false;
     }
 
-    public static void ShowAlert(String message) {
+    public static void showAlert(String message) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Информация");

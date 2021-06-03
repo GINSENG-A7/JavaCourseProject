@@ -8,8 +8,8 @@
 
 <AnchorPane prefHeight="155.0" prefWidth="275.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.AddingNewNumberController">
    <children>
-      <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#OnChoosePhotos" prefHeight="25.0" prefWidth="119.0" text="Выбрать фото" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-      <Button layoutX="142.0" layoutY="116.0" mnemonicParsing="false" onAction="#OnRegisterNewNumber" prefHeight="25.0" prefWidth="119.0" text="ОК" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#onChoosePhotos" prefHeight="25.0" prefWidth="119.0" text="Выбрать фото" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+      <Button layoutX="142.0" layoutY="116.0" mnemonicParsing="false" onAction="#onRegisterNewNumber" prefHeight="25.0" prefWidth="119.0" text="ОК" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
       <Label layoutX="14.0" layoutY="23.0" text="Числовое обозначение" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="23.0" />
       <Label layoutX="15.0" layoutY="53.0" text="Тип номера" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="53.0" />
       <Label layoutX="15.0" layoutY="82.0" text="Стоимость за человека" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="82.0" />

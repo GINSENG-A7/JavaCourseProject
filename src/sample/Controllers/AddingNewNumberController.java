@@ -37,30 +37,33 @@ public class AddingNewNumberController {
     @FXML
     void initialize() {
         try(Connection connection = dH.getConnection()) {
-            anNumberApartmentType.setItems(RequestsSQL.GetTypesOfApartments(connection));
+            anNumberApartmentType.setItems(RequestsSQL.getTypesOfApartments(connection));
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void OnChoosePhotos(ActionEvent actionEvent) throws IOException {
-        addableFiles = new ArrayList<File>(ImagesHandler.CopyAbsoluteFilesToRelativeFiles(ImagesHandler.OpenFileChooser(dialogStage)));
+    public void onChoosePhotos(ActionEvent actionEvent) throws IOException {
+        List<File> filesCheckList = ImagesHandler.openFileChooser(dialogStage);
+        if(filesCheckList != null) {
+            addableFiles = new ArrayList<File>(ImagesHandler.copyAbsoluteFilesToRelativeFiles(filesCheckList));
+        }
     }
 
-    public void OnRegisterNewNumber(ActionEvent actionEvent) {
+    public void onRegisterNewNumber(ActionEvent actionEvent) {
         if(!anNumberNumber.equals("") && anNumberApartmentType != null && !anNumberPrice.equals("")) {
             if(InputValidation.isRowConsistsOfNumbers(anNumberNumber.getText()) && InputValidation.isRowConsistsOfNumbers(anNumberPrice.getText())) {
                 if(Integer.parseInt(anNumberNumber.getText()) > 0 && Integer.parseInt(anNumberPrice.getText()) > 0){
                     // SQL-ВАЛИДАЦИЯ
                     try(Connection connection = dH.getConnection()) {
-                        if(RequestsSQL.IsNumberOfApartmentsUnique(connection, Integer.parseInt(anNumberNumber.getText()))){
-                            RequestsSQL.InsertApartmentsEntry(
+                        if(RequestsSQL.isNumberOfApartmentsUnique(connection, Integer.parseInt(anNumberNumber.getText()))){
+                            RequestsSQL.insertApartmentsEntry(
                                     connection,
                                     Integer.parseInt(anNumberNumber.getText()),
                                     anNumberApartmentType.getValue().toString(),
                                     Integer.parseInt(anNumberPrice.getText())
                             );
-                            ResultSet localResultSet = RequestsSQL.SelectApartmentsIdWithNumber(connection, Integer.parseInt(anNumberNumber.getText()));
+                            ResultSet localResultSet = RequestsSQL.selectApartmentsIdWithNumber(connection, Integer.parseInt(anNumberNumber.getText()));
                             localResultSet.next();
                             Apartments addableApartment = new Apartments(
                                     new SimpleIntegerProperty(localResultSet.getInt(1)),
@@ -68,10 +71,10 @@ public class AddingNewNumberController {
                                     new SimpleStringProperty(localResultSet.getString(3)),
                                     new SimpleIntegerProperty(localResultSet.getInt(4))
                             );
-                            ImagesHandler.CopyAbsoluteFilesToRelativeFiles(addableFiles);
+                            ImagesHandler.copyAbsoluteFilesToRelativeFiles(addableFiles);
                             // Дописать привязку файлов к записи добавленого номера в бд
                             for(int i = 0; i < addableFiles.size(); i++) {
-                                RequestsSQL.InsertPhotoEntry(connection, ImagesHandler.EscapeBackSlashes(addableFiles.get(i).getPath()), addableApartment.getApartment_id());
+                                RequestsSQL.insertPhotoEntry(connection, ImagesHandler.escapeBackSlashes(addableFiles.get(i).getPath()), addableApartment.getApartment_id());
                             }
                             dialogStage.close();
                         }

@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +18,7 @@ import sample.Models.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -91,8 +91,8 @@ public class Controller implements Initializable {
         apartmentsPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
         try(Connection connection = dH.getConnection()) {
-            apartmentsTypeCB.setItems(RequestsSQL.GetTypesOfApartments(connection));
-            discountCurrentValueL.setText(RequestsSQL.GetCurrentDiscount(connection).toString() + "%");
+            apartmentsTypeCB.setItems(RequestsSQL.getTypesOfApartments(connection));
+            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection).toString() + "%");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -117,14 +117,14 @@ public class Controller implements Initializable {
         clientsTableView.setItems(clientsOList);
     }
 
-    public void OnSelectAllClients(ActionEvent actionEvent) {
+    public void onSelectAllClients(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillClientsTableView(RequestsSQL.SelectAllFromClient(connection));
+            fillClientsTableView(RequestsSQL.selectAllFromClient(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
-    public void OnRegisterNewClient(ActionEvent actionEvent) {
+    public void onRegisterNewClient(ActionEvent actionEvent) {
         if(clientPassportSeriesTF.getText().equals("") ||
                 clientPassportNumberTF.getText().equals("") || //Если все поля основной формы заполнены, то передаём данные из полей на форму добавления
                 clientNameTF.getText().equals("") ||
@@ -141,16 +141,16 @@ public class Controller implements Initializable {
                 ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client, idOfSelectedBooking);
             }
             try {
-                ancDialog.ShowDefaultDialog();
+                ancDialog.showDefaultDialog();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         else {
             if(InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
-                    InputValidation.CheckLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
+                    InputValidation.checkLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
                     InputValidation.isRowConsistsOfNumbers(clientPassportNumberTF.getText()) &&
-                    InputValidation.CheckLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
+                    InputValidation.checkLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
                     InputValidation.isRowConsistsOfLetters(clientNameTF.getText()) &&
                     InputValidation.isRowConsistsOfLetters(clientSurnameTF.getText()) &&
                     InputValidation.isRowConsistsOfLetters(clientPatronymicTF.getText()) &&
@@ -174,7 +174,7 @@ public class Controller implements Initializable {
                     ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client, idOfSelectedBooking);
                 }
                 try {
-                    ancDialog.ShowDefaultDialog();
+                    ancDialog.showDefaultDialog();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -185,11 +185,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnMoveToLivings(ActionEvent actionEvent) {
+    public void onMoveToLivings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if(idOfSelectedClient != null) {
                 tabPane.getSelectionModel().select(livingsTab);
-                fillLivingsTableView(RequestsSQL.SelectAllFromLivingByClientId(connection, idOfSelectedClient));
+                fillLivingsTableView(RequestsSQL.selectAllFromLivingByClientId(connection, idOfSelectedClient));
             }
             else {
                 Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его проживаний");
@@ -199,11 +199,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnMoveToBookings(ActionEvent actionEvent) {
+    public void onMoveToBookings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if(idOfSelectedClient != null) {
                 tabPane.getSelectionModel().select(bookingsTab);
-                fillBookingsTableView(RequestsSQL.SelectAllFromBookingByClientId(connection, idOfSelectedClient));
+                fillBookingsTableView(RequestsSQL.selectAllFromBookingByClientId(connection, idOfSelectedClient));
             }
             else {
                 Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его броней");
@@ -213,7 +213,7 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnClickedClientsTableView(MouseEvent mouseEvent) {
+    public void onClickedClientsTableView(MouseEvent mouseEvent) {
         getClientEntryData();
     }
 
@@ -233,10 +233,93 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnDeleteClientData(ActionEvent actionEvent) {
+    public void onDeleteClientData(ActionEvent actionEvent) {
+        try(Connection connection = dH.getConnection()) {
+            Boolean hasClientNoLivingsOrBookings = RequestsSQL.doesClientHasNoLivingsAndBookings(connection, idOfSelectedClient);
+            if(hasClientNoLivingsOrBookings == true) {
+                Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данного клиента и все его данные?", "");
+                if(dialogResult == true) {
+                    if(idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
+                        RequestsSQL.deleteAllInfoAboutclient(connection, idOfSelectedClient);
+                    }
+                    else {
+                        Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
+                    }
+                }
+            }
+            else {
+                Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данного клиента?", "");
+                if(dialogResult == true) {
+                    if(idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
+                        RequestsSQL.deleteNullableClient(connection, idOfSelectedClient);
+                    }
+                    else {
+                        Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
-    public void OnChangeClientData(ActionEvent actionEvent) {
+    public void onChangeClientData(ActionEvent actionEvent) {
+        Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные данного клиента?", "");
+        if(dialogResult == true) {
+            if(
+                    !clientPassportSeriesTF.getText().equals("") ||
+                    !clientPassportNumberTF.getText().equals("") ||
+                    !clientNameTF.getText().equals("") ||
+                    !clientSurnameTF.getText().equals("") ||
+                    !clientPatronymicTF.getText().equals("") ||
+                    clientBirthdayDP.getValue() != null ||
+                    !clientTelephoneTF.getText().equals("")
+            ) {
+                if(InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
+                        InputValidation.checkLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
+                        InputValidation.isRowConsistsOfNumbers(clientPassportNumberTF.getText()) &&
+                        InputValidation.checkLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
+                        InputValidation.isRowConsistsOfLetters(clientNameTF.getText()) &&
+                        InputValidation.isRowConsistsOfLetters(clientSurnameTF.getText()) &&
+                        InputValidation.isRowConsistsOfLetters(clientPatronymicTF.getText()) &&
+                        InputValidation.isRowConsistsOfNumbers(clientTelephoneTF.getText()) &&
+                        clientBirthdayDP.getValue().isBefore(LocalDate.now())
+                ) {
+                    Client client = new Client(
+                            -1,
+                            Integer.parseInt(clientPassportSeriesTF.getText()),
+                            Integer.parseInt(clientPassportNumberTF.getText()),
+                            clientNameTF.getText(),
+                            clientSurnameTF.getText(),
+                            clientPatronymicTF.getText(),
+                            clientBirthdayDP.getValue().toString(),
+                            clientTelephoneTF.getText()
+                    );
+                    try(Connection connection = dH.getConnection()) {
+                        RequestsSQL.updateClientWithValues(
+                                connection,
+                                idOfSelectedClient,
+                                client.getPassport_series(),
+                                client.getPassport_number(),
+                                client.getName(),
+                                client.getSurname(),
+                                client.getPatronymic(),
+                                Date.valueOf(client.getBirthday()),
+                                client.getTelephone()
+
+                        );
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+                else {
+                    Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
+                }
+            }
+            else {
+                Alerts.showWarningAlert("Недопустимые данные клиента!", "Для изменения данных клиента все поля обязательны к заполнению", "");
+            }
+        }
     }
 
     //TAB LIVINGS
@@ -286,15 +369,15 @@ public class Controller implements Initializable {
         livingsTableView.setItems(livingsOList);
     }
 
-    public void OnSelectAllLivings(ActionEvent actionEvent) {
+    public void onSelectAllLivings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillLivingsTableView(RequestsSQL.SelectAllFromLiving(connection));
+            fillLivingsTableView(RequestsSQL.selectAllFromLiving(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void OnClickedLivingsTableView(MouseEvent mouseEvent) {
+    public void onClickedLivingsTableView(MouseEvent mouseEvent) {
         getLivingEntryData();
     }
 
@@ -309,10 +392,10 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnShowAdditionalServices(ActionEvent actionEvent) {
+    public void onShowAdditionalServices(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if(idOfSelectedLiving != null) {
-                Integer[] idOfAdditionalServices = RequestsSQL.SelectAllFromAdditionalServicesWhereIsSetLivingID(connection, idOfSelectedASFromLiving);
+                Integer[] idOfAdditionalServices = RequestsSQL.selectAllFromAdditionalServicesWhereIsSetLivingID(connection, idOfSelectedASFromLiving);
                 if(idOfAdditionalServices != null) {
                     AdditionalServices relatedAdditionalServices = new AdditionalServices(
                             new SimpleIntegerProperty(idOfAdditionalServices[0]),
@@ -323,7 +406,7 @@ public class Controller implements Initializable {
                             new SimpleIntegerProperty(idOfAdditionalServices[5])
                     );
                     easDialog = new EditingAdditionalServicesDialog(false, "Views/EditingAdditionalServices.fxml", "Дополнительные услуги", idOfSelectedLiving, relatedAdditionalServices);
-                    easDialog.ShowDefaultDialog();
+                    easDialog.showDefaultDialog();
                 }
                 else {
                     Alerts.showWarningAlert("", "У данного проживания нет информации о дополнительных услугах", "");
@@ -337,11 +420,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnMoveToClientByLiving(ActionEvent actionEvent) {
+    public void onMoveToClientByLiving(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if (idOfSelectedClientFromLiving != null){
                 tabPane.getSelectionModel().select(clientsTab);
-                fillClientsTableView(RequestsSQL.SelectAllFromClientByClientId(connection, idOfSelectedClientFromLiving));
+                fillClientsTableView(RequestsSQL.selectAllFromClientByClientId(connection, idOfSelectedClientFromLiving));
             }
             else {
                 Alerts.showWarningAlert("Внимание!", "Проживание не выбрано", "Необходимо выбрать проживание для отображения информации о клиенте");
@@ -351,12 +434,12 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnDeleteLivingData(ActionEvent actionEvent) {
+    public void onDeleteLivingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данное проживание?", "");
         if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null) {
+            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
                 try(Connection connection = dH.getConnection()) {
-                    RequestsSQL.DeleteLivingEntry(connection, idOfSelectedLiving, idOfSelectedASFromLiving);
+                    RequestsSQL.deleteLivingEntry(connection, idOfSelectedLiving, idOfSelectedASFromLiving);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -367,28 +450,31 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnChangeLivingData(ActionEvent actionEvent) {
+    public void onChangeLivingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные данного проживания?", "");
         if(dialogResult == true) {
-            if(Integer.parseInt(livingsValueOfGuestsTF.getText()) > 0) {
-                if(Integer.parseInt(livingsValueOfGuestsTF.getText()) < Integer.parseInt(livingsValueOfGuestsTF.getText())) {
-                    try(Connection connection = dH.getConnection()) {
-                        RequestsSQL.ChangeLivingEntry(
-                                connection,
-                                idOfSelectedLiving,
-                                Integer.parseInt(livingsValueOfGuestsTF.getText()),
-                                Integer.parseInt(livingsValueOfKidsTF.getText())
-                        );
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
+                if (Integer.parseInt(livingsValueOfGuestsTF.getText()) > 0) {
+                    if (Integer.parseInt(livingsValueOfKidsTF.getText()) < Integer.parseInt(livingsValueOfGuestsTF.getText())) {
+                        try (Connection connection = dH.getConnection()) {
+                            RequestsSQL.changeLivingEntry(
+                                    connection,
+                                    idOfSelectedLiving,
+                                    Integer.parseInt(livingsValueOfGuestsTF.getText()),
+                                    Integer.parseInt(livingsValueOfKidsTF.getText())
+                            );
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    } else {
+                        Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество детей не может быть больше количества взрослых", "");
                     }
-                }
-                else {
-                    Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество детей не может быть больше количества взрослых", "");
+                } else {
+                    Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество гостей должно быть больше нуля", "");
                 }
             }
             else {
-                Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество гостей должно быть больше нуля", "");
+                Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
     }
@@ -439,15 +525,15 @@ public class Controller implements Initializable {
         bookingTableView.setItems(bookingsOList);
     }
 
-    public void OnSelectAllBookings(ActionEvent actionEvent) {
+    public void onSelectAllBookings(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillBookingsTableView(RequestsSQL.SelectAllFromBooking(connection));
+            fillBookingsTableView(RequestsSQL.selectAllFromBooking(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void OnClickedBookingsTableView(MouseEvent mouseEvent) {
+    public void onClickedBookingsTableView(MouseEvent mouseEvent) {
         getBookingEntryData();
     }
 
@@ -461,11 +547,11 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnMoveToClientByBooking(ActionEvent actionEvent) {
+    public void onMoveToClientByBooking(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if(idOfSelectedClientFromBooking != null) {
                 tabPane.getSelectionModel().select(clientsTab);
-                fillClientsTableView(RequestsSQL.SelectAllFromClientByClientId(connection, idOfSelectedClientFromBooking));
+                fillClientsTableView(RequestsSQL.selectAllFromClientByClientId(connection, idOfSelectedClientFromBooking));
             }
             else {
                 Alerts.showWarningAlert("Внимание!", "Бронь не выбрана", "Необходимо выбрать бронь для отображения информации о клиенте");
@@ -475,12 +561,12 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnDeleteBookingData(ActionEvent actionEvent) {
+    public void onDeleteBookingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данную бронь?", "");
         if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null) {
+            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
                 try(Connection connection = dH.getConnection()) {
-                    RequestsSQL.DeleteBookingEntry(connection, idOfSelectedLiving);
+                    RequestsSQL.deleteBookingEntry(connection, idOfSelectedLiving);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
@@ -491,28 +577,31 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnChangeBookingData(ActionEvent actionEvent) {
+    public void onChangeBookingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные брони?", "");
         if(dialogResult == true) {
-            if(Integer.parseInt(bookingsValueOfGuestsTF.getText()) > 0) {
-                if(Integer.parseInt(bookingsValueOfGuestsTF.getText()) < Integer.parseInt(bookingsValueOfGuestsTF.getText())) {
-                    try(Connection connection = dH.getConnection()) {
-                        RequestsSQL.ChangeBookingEntry(
-                                connection,
-                                idOfSelectedBooking,
-                                Integer.parseInt(bookingsValueOfGuestsTF.getText()),
-                                Integer.parseInt(bookingsValueOfKidsTF.getText())
-                        );
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
+                if (Integer.parseInt(bookingsValueOfGuestsTF.getText()) > 0) {
+                    if (Integer.parseInt(bookingsValueOfKidsTF.getText()) < Integer.parseInt(bookingsValueOfGuestsTF.getText())) {
+                        try (Connection connection = dH.getConnection()) {
+                            RequestsSQL.changeBookingEntry(
+                                    connection,
+                                    idOfSelectedBooking,
+                                    Integer.parseInt(bookingsValueOfGuestsTF.getText()),
+                                    Integer.parseInt(bookingsValueOfKidsTF.getText())
+                            );
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                        }
+                    } else {
+                        Alerts.showWarningAlert("Недопустимые данные брони!", "Количество детей не может быть больше количества взрослых", "");
                     }
-                }
-                else {
-                    Alerts.showWarningAlert("Недопустимые данные брони!", "Количество детей не может быть больше количества взрослых", "");
+                } else {
+                    Alerts.showWarningAlert("Недопустимые данные брони!", "Количество гостей должно быть больше нуля", "");
                 }
             }
             else {
-                Alerts.showWarningAlert("Недопустимые данные брони!", "Количество гостей должно быть больше нуля", "");
+                Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
     }
@@ -549,15 +638,15 @@ public class Controller implements Initializable {
         apartmentsTableView.setItems(apartmentsOList);
     }
 
-    public void OnSelectAllApartments(ActionEvent actionEvent) {
+    public void onSelectAllApartments(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            fillApartmentsTableView(RequestsSQL.SelectAllFromApartments(connection));
+            fillApartmentsTableView(RequestsSQL.selectAllFromApartments(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void OnClickedApartmentsTableView(MouseEvent mouseEvent) {
+    public void onClickedApartmentsTableView(MouseEvent mouseEvent) {
         getApartmentsEntryData();
     }
 
@@ -572,24 +661,24 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnChangeDiscount(ActionEvent actionEvent) {
+    public void onChangeDiscount(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            RequestsSQL.SetNewDiscount(connection, Integer.parseInt(discountNewValueTF.getText()));
-            discountCurrentValueL.setText(RequestsSQL.GetCurrentDiscount(connection).toString() + "%");
+            RequestsSQL.setNewDiscount(connection, Integer.parseInt(discountNewValueTF.getText()));
+            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection).toString() + "%");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
 
-    public void OnAddNewApartment(ActionEvent actionEvent) throws IOException {
+    public void onAddNewApartment(ActionEvent actionEvent) throws IOException {
         annDialog = new AddingNewNumberDialog(false, "Views/AddingNewNumber.fxml", "Добавление нового номера", idOfSelectedApartment);
-        annDialog.ShowDefaultDialog();
+        annDialog.showDefaultDialog();
     }
 
-    public void OnDeleteApartmentData(ActionEvent actionEvent) {
+    public void onDeleteApartmentData(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            if(RequestsSQL.IsThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
-                RequestsSQL.DeleteApartmentsEntry(
+            if(RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+                RequestsSQL.deleteApartmentsEntry(
                         connection,
                         idOfSelectedApartment
                 );
@@ -602,14 +691,14 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnChangeApartmentData(ActionEvent actionEvent) {
+    public void onChangeApartmentData(ActionEvent actionEvent) {
         if(!apartmentsNumberTF.equals("") && apartmentsTypeCB != null && !apartmentsPriceTF.equals("")) {
             if(InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText()) && InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText())) {
                 if(Integer.parseInt(apartmentsNumberTF.getText()) > 0 && Integer.parseInt(apartmentsNumberTF.getText()) > 0){
                     //SQL-ВАЛИДАЦИЯ
                     try(Connection connection = dH.getConnection()) {
-                        if(RequestsSQL.IsThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
-                            RequestsSQL.ChangeApartmentsEntry(
+                        if(RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+                            RequestsSQL.changeApartmentsEntry(
                                     connection,
                                     idOfSelectedApartment,
                                     Integer.parseInt(apartmentsNumberTF.getText()),
@@ -637,10 +726,10 @@ public class Controller implements Initializable {
         }
     }
 
-    public void OnViewPhotosOfApartment(ActionEvent actionEvent) throws IOException {
+    public void onViewPhotosOfApartment(ActionEvent actionEvent) throws IOException {
         if(idOfSelectedApartment != null) {
             vapDialog = new ViewingApartmentsPhotosDialog(false, "Views/ViewingApartmentsPhotos.fxml", "", idOfSelectedApartment);
-            vapDialog.ShowDefaultDialog();
+            vapDialog.showDefaultDialog();
         }
         else {
             Alerts.showWarningAlert("Внимание!", "Номер не выбран", "Необходимо выбрать номер для отображения его фотографий");

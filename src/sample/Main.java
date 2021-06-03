@@ -42,7 +42,7 @@ public class Main extends Application {
         try
         {
             Parent root = FXMLLoader.load(getClass().getResource("Views/sample.fxml"));
-            primaryStage.setTitle("Hello World");
+            primaryStage.setTitle("АРМ администратора гостиницы");
             primaryStage.setScene(new Scene(root, 1048, 489));
             primaryStage.setMinWidth(1048);
             primaryStage.setMinHeight(489);

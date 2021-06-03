@@ -40,7 +40,7 @@ public class EditingAdditionalServicesController {
         asFoodTF.setText(String.valueOf(relatedAS.getFood()));
     }
 
-    public void OnSaveChanges(ActionEvent actionEvent) {
+    public void onSaveChanges(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
             if(
                     !asMinibarTF.getText().equals("") &&
@@ -56,7 +56,7 @@ public class EditingAdditionalServicesController {
                         Integer.parseInt(asIntercityTelephoneTF.getText()) >= 0 &&
                         Integer.parseInt(asFoodTF.getText()) >= 0
                 ) {
-                    RequestsSQL.ChangeAdditionalServices(
+                    RequestsSQL.changeAdditionalServices(
                             connection,
                             relatedAS.getAs_id(),
                             Integer.parseInt(asMinibarTF.getText()),
@@ -79,9 +79,9 @@ public class EditingAdditionalServicesController {
         }
     }
 
-    public void OnRefresh(ActionEvent actionEvent) {
+    public void onRefresh(ActionEvent actionEvent) {
         try(Connection connection = dH.getConnection()) {
-            Integer[] tempASData = RequestsSQL.SelectAllFromAdditionalServicesWhereIsSetLivingID(connection, relatedAS.getAs_id());
+            Integer[] tempASData = RequestsSQL.selectAllFromAdditionalServicesWhereIsSetLivingID(connection, relatedAS.getAs_id());
             if(tempASData.length > 0) {
                 asMinibarTF.setText(String.valueOf(tempASData[1]));
                 asClothesWashingTF.setText(String.valueOf(tempASData[2]));
