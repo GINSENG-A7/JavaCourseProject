@@ -6,16 +6,14 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Controllers.AddingNewNumberController;
-import sample.Controllers.EditingAdditionalServicesController;
 import sample.Main;
-import sample.Models.Apartments;
 
 import java.io.IOException;
 
 public class AddingNewNumberDialog {
-    private boolean dialogResultIsOK;
-    private String viewFileName;
-    private String windowTitle;
+    private final boolean dialogResultIsOK;
+    private final String viewFileName;
+    private final String windowTitle;
     private Integer apartmentId;
 
     public AddingNewNumberDialog(boolean dialogResultIsOK, String viewFileName, String windowTitle, Integer apartmentId) {

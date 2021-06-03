@@ -36,25 +36,22 @@ public class Main extends Application {
         return viewingApartmentsPhotosStage;
     }
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
-    public void start(Stage primaryStage){
-        this.mainStage = primaryStage;
-        try
-        {
+    public void start(Stage primaryStage) {
+        mainStage = primaryStage;
+        try {
             Parent root = FXMLLoader.load(getClass().getResource("Views/sample.fxml"));
             primaryStage.setTitle("АРМ администратора гостиницы");
             primaryStage.setScene(new Scene(root, 1048, 489));
             primaryStage.setMinWidth(1048);
             primaryStage.setMinHeight(489);
             primaryStage.show();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.getMessage();
         }
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

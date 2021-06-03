@@ -5,24 +5,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sample.Controllers.AddingNewClientController;
 import sample.Controllers.EditingAdditionalServicesController;
 import sample.Main;
 import sample.Models.AdditionalServices;
-import sample.Models.Client;
 
 import java.io.IOException;
 
 public class EditingAdditionalServicesDialog {
-    private boolean dialogResultIsOK;
-    private String viewFileName;
-    private String windowTitle;
-    private Integer livingId;
-    private AdditionalServices additionalServices;
-
-    public boolean isDialogResultIsOK() {
-        return dialogResultIsOK;
-    }
+    private final boolean dialogResultIsOK;
+    private final String viewFileName;
+    private final String windowTitle;
+    private final Integer livingId;
+    private final AdditionalServices additionalServices;
 
     public EditingAdditionalServicesDialog(boolean dialogResultIsOK, String viewFileName, String windowTitle, Integer livingId, AdditionalServices additionalServices) {
         this.dialogResultIsOK = dialogResultIsOK;
@@ -30,6 +24,10 @@ public class EditingAdditionalServicesDialog {
         this.windowTitle = windowTitle;
         this.livingId = livingId;
         this.additionalServices = additionalServices;
+    }
+
+    public boolean isDialogResultIsOK() {
+        return dialogResultIsOK;
     }
 
     public void showDefaultDialog() throws IOException {
@@ -48,7 +46,7 @@ public class EditingAdditionalServicesDialog {
         editingAdditionalServicesStage.setScene(scene);
         EditingAdditionalServicesController controller = loader.getController();
         controller.setDialogStage(editingAdditionalServicesStage);
-        if(this.additionalServices != null) {
+        if (this.additionalServices != null) {
             controller.setRelatedAS(additionalServices);
         }
         editingAdditionalServicesStage.showAndWait();

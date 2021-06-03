@@ -8,12 +8,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import sample.*;
+import sample.Alerts;
+import sample.DbHandler;
 import sample.Dialogs.AddingNewClientDialog;
 import sample.Dialogs.AddingNewNumberDialog;
 import sample.Dialogs.EditingAdditionalServicesDialog;
 import sample.Dialogs.ViewingApartmentsPhotosDialog;
+import sample.InputValidation;
 import sample.Models.*;
+import sample.RequestsSQL;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,9 +48,68 @@ public class Controller implements Initializable {
     public TableColumn<Client, String> clientPatronymicColumn;
     public TableColumn<Client, String> clientBirthdayColumn;
     public TableColumn<Client, String> clientTelephoneColumn;
-    private ObservableList<Client> clientsOList = FXCollections.observableArrayList();
-    private Integer idOfSelectedClient = null;
+    //TAB LIVINGS
+    public EditingAdditionalServicesDialog easDialog;
+    public Tab livingsTab;
+    public TextField livingsValueOfGuestsTF;
+    public TextField livingsValueOfKidsTF;
+    public TableView<Living> livingsTableView;
+    public TableColumn<Living, Integer> livingIdColumn;
+    public TableColumn<Living, Integer> livingClientIdColumn;
+    public TableColumn<Living, String> livingClientNameColumn;
+    public TableColumn<Living, String> livingClientSurnameColumn;
+    public TableColumn<Living, String> livingClientPatronymicColumn;
+    public TableColumn<Living, String> livingSettlingColumn;
+    public TableColumn<Living, String> livingEvictionColumn;
+    public TableColumn<Living, Integer> livingApartmentNumberColumn;
+    public TableColumn<Living, Integer> livingGuestsValueColumn;
+    public TableColumn<Living, Integer> livingKidsValueColumn;
+    public TableColumn<Living, Integer> livingApartmentIdColumn;
+    public TableColumn<Living, Integer> livingASIdColumn;
+    //TAB BOOKINGS
+    public Tab bookingsTab;
+    public TextField bookingsValueOfGuestsTF;
+    public TextField bookingsValueOfKidsTF;
+    public CheckBox IsBookingsDataIncludedToNextClientRegistration;
+    public TableView<Booking> bookingTableView;
+    public TableColumn<Booking, Integer> bookingIdColumn;
+    public TableColumn<Booking, Integer> bookingClientIdColumn;
+    public TableColumn<Booking, String> bookingClientNameColumn;
+    public TableColumn<Booking, String> bookingClientSurnameColumn;
+    public TableColumn<Booking, String> bookingClientPatronymicColumn;
+    public TableColumn<Booking, String> bookingSettlingColumn;
+    public TableColumn<Booking, String> bookingEvictionColumn;
+    public TableColumn<Booking, Integer> bookingApartmentNumberColumn;
+    public TableColumn<Booking, Integer> bookingGuestsValueColumn;
+    public TableColumn<Booking, Integer> bookingKidsValueColumn;
+    public TableColumn<Booking, Integer> bookingApartmentIdColumn;
+    //TAB APARTMENTS
+    public ViewingApartmentsPhotosDialog vapDialog;
+    public AddingNewNumberDialog annDialog;
+    public Tab apartmentsTab;
+    public TextField apartmentsNumberTF;
+    public ComboBox apartmentsTypeCB;
+    public TextField apartmentsPriceTF;
+    public Label discountCurrentValueL;
+    public TextField discountNewValueTF;
+    public TableView<Apartments> apartmentsTableView;
+    public TableColumn<Apartments, Integer> apartmentsIdColumn;
+    public TableColumn<Apartments, Integer> apartmentsNumberColumn;
+    public TableColumn<Apartments, String> apartmentsTypeColumn;
+    public TableColumn<Apartments, Integer> apartmentsPriceColumn;
     DbHandler dH = DbHandler.getDbHandler();
+    private final ObservableList<Client> clientsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedClient = null;
+    private final ObservableList<Living> livingsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedLiving = null;
+    private Integer idOfSelectedASFromLiving = null;
+    private Integer idOfSelectedClientFromLiving = null;
+    private final Integer idOfAdditionalServices = null;
+    private final ObservableList<Booking> bookingsOList = FXCollections.observableArrayList();
+    private Integer idOfSelectedBooking = null;
+    private Integer idOfSelectedClientFromBooking = null;
+    private Integer idOfSelectedApartment;
+    private final ObservableList<Apartments> apartmentsOList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -90,9 +152,9 @@ public class Controller implements Initializable {
         apartmentsTypeColumn.setCellValueFactory(apartmentsStringCellDataFeatures -> apartmentsStringCellDataFeatures.getValue().typeProperty());
         apartmentsPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             apartmentsTypeCB.setItems(RequestsSQL.getTypesOfApartments(connection));
-            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection).toString() + "%");
+            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection) + "%");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,8 +162,7 @@ public class Controller implements Initializable {
 
     private void fillClientsTableView(ResultSet localResultSet) throws SQLException {
         clientsOList.clear();
-        while (localResultSet.next())
-        {
+        while (localResultSet.next()) {
             Client client = new Client(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
                     new SimpleIntegerProperty(localResultSet.getInt(2)),
@@ -118,14 +179,15 @@ public class Controller implements Initializable {
     }
 
     public void onSelectAllClients(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             fillClientsTableView(RequestsSQL.selectAllFromClient(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
     }
+
     public void onRegisterNewClient(ActionEvent actionEvent) {
-        if(clientPassportSeriesTF.getText().equals("") ||
+        if (clientPassportSeriesTF.getText().equals("") ||
                 clientPassportNumberTF.getText().equals("") || //Если все поля основной формы заполнены, то передаём данные из полей на форму добавления
                 clientNameTF.getText().equals("") ||
                 clientSurnameTF.getText().equals("") ||
@@ -134,10 +196,9 @@ public class Controller implements Initializable {
                 clientTelephoneTF.getText().equals("")
         ) {
             Client client = new Client();
-            if(IsBookingsDataIncludedToNextClientRegistration.isSelected() == false) {
+            if (IsBookingsDataIncludedToNextClientRegistration.isSelected() == false) {
                 ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
-            }
-            else {
+            } else {
                 ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client, idOfSelectedBooking);
             }
             try {
@@ -145,9 +206,8 @@ public class Controller implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        else {
-            if(InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
+        } else {
+            if (InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
                     InputValidation.checkLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
                     InputValidation.isRowConsistsOfNumbers(clientPassportNumberTF.getText()) &&
                     InputValidation.checkLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
@@ -167,10 +227,9 @@ public class Controller implements Initializable {
                         clientBirthdayDP.getValue().toString(),
                         clientTelephoneTF.getText()
                 );
-                if(IsBookingsDataIncludedToNextClientRegistration.isSelected() == false) {
+                if (IsBookingsDataIncludedToNextClientRegistration.isSelected() == false) {
                     ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client);
-                }
-                else {
+                } else {
                     ancDialog = new AddingNewClientDialog(false, "Views/AddingNewCustomer.fxml", "Регистрация клиента", client, idOfSelectedBooking);
                 }
                 try {
@@ -178,20 +237,18 @@ public class Controller implements Initializable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
             }
         }
     }
 
     public void onMoveToLivings(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if(idOfSelectedClient != null) {
+        try (Connection connection = dH.getConnection()) {
+            if (idOfSelectedClient != null) {
                 tabPane.getSelectionModel().select(livingsTab);
                 fillLivingsTableView(RequestsSQL.selectAllFromLivingByClientId(connection, idOfSelectedClient));
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его проживаний");
             }
         } catch (SQLException e) {
@@ -200,12 +257,11 @@ public class Controller implements Initializable {
     }
 
     public void onMoveToBookings(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if(idOfSelectedClient != null) {
+        try (Connection connection = dH.getConnection()) {
+            if (idOfSelectedClient != null) {
                 tabPane.getSelectionModel().select(bookingsTab);
                 fillBookingsTableView(RequestsSQL.selectAllFromBookingByClientId(connection, idOfSelectedClient));
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Внимание!", "Клиент не выбран", "Необходимо выбрать клиента для отображения его броней");
             }
         } catch (SQLException e) {
@@ -234,26 +290,23 @@ public class Controller implements Initializable {
     }
 
     public void onDeleteClientData(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             Boolean hasClientNoLivingsOrBookings = RequestsSQL.doesClientHasNoLivingsAndBookings(connection, idOfSelectedClient);
-            if(hasClientNoLivingsOrBookings == true) {
+            if (hasClientNoLivingsOrBookings == true) {
                 Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данного клиента и все его данные?", "");
-                if(dialogResult == true) {
-                    if(idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
+                if (dialogResult == true) {
+                    if (idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
                         RequestsSQL.deleteAllInfoAboutclient(connection, idOfSelectedClient);
-                    }
-                    else {
+                    } else {
                         Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
                     }
                 }
-            }
-            else {
+            } else {
                 Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данного клиента?", "");
-                if(dialogResult == true) {
-                    if(idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
+                if (dialogResult == true) {
+                    if (idOfSelectedClient != null && clientsTableView.getSelectionModel() != null) {
                         RequestsSQL.deleteNullableClient(connection, idOfSelectedClient);
-                    }
-                    else {
+                    } else {
                         Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
                     }
                 }
@@ -265,17 +318,17 @@ public class Controller implements Initializable {
 
     public void onChangeClientData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные данного клиента?", "");
-        if(dialogResult == true) {
-            if(
+        if (dialogResult == true) {
+            if (
                     !clientPassportSeriesTF.getText().equals("") ||
-                    !clientPassportNumberTF.getText().equals("") ||
-                    !clientNameTF.getText().equals("") ||
-                    !clientSurnameTF.getText().equals("") ||
-                    !clientPatronymicTF.getText().equals("") ||
-                    clientBirthdayDP.getValue() != null ||
-                    !clientTelephoneTF.getText().equals("")
+                            !clientPassportNumberTF.getText().equals("") ||
+                            !clientNameTF.getText().equals("") ||
+                            !clientSurnameTF.getText().equals("") ||
+                            !clientPatronymicTF.getText().equals("") ||
+                            clientBirthdayDP.getValue() != null ||
+                            !clientTelephoneTF.getText().equals("")
             ) {
-                if(InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
+                if (InputValidation.isRowConsistsOfNumbers(clientPassportSeriesTF.getText()) &&
                         InputValidation.checkLenthOfPassportNumber(clientPassportNumberTF.getText()) &&
                         InputValidation.isRowConsistsOfNumbers(clientPassportNumberTF.getText()) &&
                         InputValidation.checkLenthOfPassportSeries(clientPassportSeriesTF.getText()) &&
@@ -295,7 +348,7 @@ public class Controller implements Initializable {
                             clientBirthdayDP.getValue().toString(),
                             clientTelephoneTF.getText()
                     );
-                    try(Connection connection = dH.getConnection()) {
+                    try (Connection connection = dH.getConnection()) {
                         RequestsSQL.updateClientWithValues(
                                 connection,
                                 idOfSelectedClient,
@@ -311,45 +364,18 @@ public class Controller implements Initializable {
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
-                }
-                else {
+                } else {
                     Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Недопустимые данные клиента!", "Для изменения данных клиента все поля обязательны к заполнению", "");
             }
         }
     }
 
-    //TAB LIVINGS
-    public EditingAdditionalServicesDialog easDialog;
-    public Tab livingsTab;
-    public TextField livingsValueOfGuestsTF;
-    public TextField livingsValueOfKidsTF;
-    public TableView<Living> livingsTableView;
-    public TableColumn<Living, Integer> livingIdColumn;
-    public TableColumn<Living, Integer> livingClientIdColumn;
-    public TableColumn<Living, String> livingClientNameColumn;
-    public TableColumn<Living, String> livingClientSurnameColumn;
-    public TableColumn<Living, String> livingClientPatronymicColumn;
-    public TableColumn<Living, String> livingSettlingColumn;
-    public TableColumn<Living, String> livingEvictionColumn;
-    public TableColumn<Living, Integer> livingApartmentNumberColumn;
-    public TableColumn<Living, Integer> livingGuestsValueColumn;
-    public TableColumn<Living, Integer> livingKidsValueColumn;
-    public TableColumn<Living, Integer> livingApartmentIdColumn;
-    public TableColumn<Living, Integer> livingASIdColumn;
-    private ObservableList<Living> livingsOList = FXCollections.observableArrayList();
-    private Integer idOfSelectedLiving = null;
-    private Integer idOfSelectedASFromLiving = null;
-    private Integer idOfSelectedClientFromLiving = null;
-    private Integer idOfAdditionalServices = null;
-
     private void fillLivingsTableView(ResultSet localResultSet) throws SQLException {
         livingsOList.clear();
-        while (localResultSet.next())
-        {
+        while (localResultSet.next()) {
             Living living = new Living(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
                     new SimpleIntegerProperty(localResultSet.getInt(2)),
@@ -370,7 +396,7 @@ public class Controller implements Initializable {
     }
 
     public void onSelectAllLivings(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             fillLivingsTableView(RequestsSQL.selectAllFromLiving(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -393,10 +419,10 @@ public class Controller implements Initializable {
     }
 
     public void onShowAdditionalServices(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if(idOfSelectedLiving != null) {
+        try (Connection connection = dH.getConnection()) {
+            if (idOfSelectedLiving != null) {
                 Integer[] idOfAdditionalServices = RequestsSQL.selectAllFromAdditionalServicesWhereIsSetLivingID(connection, idOfSelectedASFromLiving);
-                if(idOfAdditionalServices != null) {
+                if (idOfAdditionalServices != null) {
                     AdditionalServices relatedAdditionalServices = new AdditionalServices(
                             new SimpleIntegerProperty(idOfAdditionalServices[0]),
                             new SimpleIntegerProperty(idOfAdditionalServices[1]),
@@ -407,12 +433,10 @@ public class Controller implements Initializable {
                     );
                     easDialog = new EditingAdditionalServicesDialog(false, "Views/EditingAdditionalServices.fxml", "Дополнительные услуги", idOfSelectedLiving, relatedAdditionalServices);
                     easDialog.showDefaultDialog();
-                }
-                else {
+                } else {
                     Alerts.showWarningAlert("", "У данного проживания нет информации о дополнительных услугах", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Ошибка открытия дополнительных услуг!", "Следует выбрать проживание для отображения информации о дополнительных услугах", "");
             }
         } catch (SQLException | IOException throwables) {
@@ -421,12 +445,11 @@ public class Controller implements Initializable {
     }
 
     public void onMoveToClientByLiving(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if (idOfSelectedClientFromLiving != null){
+        try (Connection connection = dH.getConnection()) {
+            if (idOfSelectedClientFromLiving != null) {
                 tabPane.getSelectionModel().select(clientsTab);
                 fillClientsTableView(RequestsSQL.selectAllFromClientByClientId(connection, idOfSelectedClientFromLiving));
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Внимание!", "Проживание не выбрано", "Необходимо выбрать проживание для отображения информации о клиенте");
             }
         } catch (SQLException e) {
@@ -436,15 +459,14 @@ public class Controller implements Initializable {
 
     public void onDeleteLivingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данное проживание?", "");
-        if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
-                try(Connection connection = dH.getConnection()) {
+        if (dialogResult == true) {
+            if (idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
+                try (Connection connection = dH.getConnection()) {
                     RequestsSQL.deleteLivingEntry(connection, idOfSelectedLiving, idOfSelectedASFromLiving);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
@@ -452,8 +474,8 @@ public class Controller implements Initializable {
 
     public void onChangeLivingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные данного проживания?", "");
-        if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
+        if (dialogResult == true) {
+            if (idOfSelectedLiving != null && idOfSelectedASFromLiving != null && livingsTableView.getSelectionModel() != null) {
                 if (Integer.parseInt(livingsValueOfGuestsTF.getText()) > 0) {
                     if (Integer.parseInt(livingsValueOfKidsTF.getText()) < Integer.parseInt(livingsValueOfGuestsTF.getText())) {
                         try (Connection connection = dH.getConnection()) {
@@ -472,41 +494,15 @@ public class Controller implements Initializable {
                 } else {
                     Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество гостей должно быть больше нуля", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
     }
 
-
-
-    //TAB BOOKINGS
-    public Tab bookingsTab;
-    public TextField bookingsValueOfGuestsTF;
-    public TextField bookingsValueOfKidsTF;
-    public CheckBox IsBookingsDataIncludedToNextClientRegistration;
-    public TableView<Booking> bookingTableView;
-    public TableColumn<Booking, Integer> bookingIdColumn;
-    public TableColumn<Booking, Integer> bookingClientIdColumn;
-    public TableColumn<Booking, String> bookingClientNameColumn;
-    public TableColumn<Booking, String> bookingClientSurnameColumn;
-    public TableColumn<Booking, String> bookingClientPatronymicColumn;
-    public TableColumn<Booking, String> bookingSettlingColumn;
-    public TableColumn<Booking, String> bookingEvictionColumn;
-    public TableColumn<Booking, Integer> bookingApartmentNumberColumn;
-    public TableColumn<Booking, Integer> bookingGuestsValueColumn;
-    public TableColumn<Booking, Integer> bookingKidsValueColumn;
-    public TableColumn<Booking, Integer> bookingApartmentIdColumn;
-    private ObservableList<Booking> bookingsOList = FXCollections.observableArrayList();
-    private Integer idOfSelectedBooking = null;
-    private Integer idOfSelectedClientFromBooking = null;
-
-
     public void fillBookingsTableView(ResultSet localResultSet) throws SQLException {
         bookingsOList.clear();
-        while (localResultSet.next())
-        {
+        while (localResultSet.next()) {
             Booking booking = new Booking(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
                     new SimpleIntegerProperty(localResultSet.getInt(2)),
@@ -526,7 +522,7 @@ public class Controller implements Initializable {
     }
 
     public void onSelectAllBookings(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             fillBookingsTableView(RequestsSQL.selectAllFromBooking(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -548,12 +544,11 @@ public class Controller implements Initializable {
     }
 
     public void onMoveToClientByBooking(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if(idOfSelectedClientFromBooking != null) {
+        try (Connection connection = dH.getConnection()) {
+            if (idOfSelectedClientFromBooking != null) {
                 tabPane.getSelectionModel().select(clientsTab);
                 fillClientsTableView(RequestsSQL.selectAllFromClientByClientId(connection, idOfSelectedClientFromBooking));
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Внимание!", "Бронь не выбрана", "Необходимо выбрать бронь для отображения информации о клиенте");
             }
         } catch (SQLException e) {
@@ -563,15 +558,14 @@ public class Controller implements Initializable {
 
     public void onDeleteBookingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите удалить данную бронь?", "");
-        if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
-                try(Connection connection = dH.getConnection()) {
+        if (dialogResult == true) {
+            if (idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
+                try (Connection connection = dH.getConnection()) {
                     RequestsSQL.deleteBookingEntry(connection, idOfSelectedLiving);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-            }
-            else {
+            } else {
                 Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
@@ -579,8 +573,8 @@ public class Controller implements Initializable {
 
     public void onChangeBookingData(ActionEvent actionEvent) {
         Boolean dialogResult = Alerts.showConfirmationAlert("", "Вы уверены, что хотите изменить данные брони?", "");
-        if(dialogResult == true) {
-            if(idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
+        if (dialogResult == true) {
+            if (idOfSelectedLiving != null && idOfSelectedASFromLiving != null && bookingTableView.getSelectionModel() != null) {
                 if (Integer.parseInt(bookingsValueOfGuestsTF.getText()) > 0) {
                     if (Integer.parseInt(bookingsValueOfKidsTF.getText()) < Integer.parseInt(bookingsValueOfGuestsTF.getText())) {
                         try (Connection connection = dH.getConnection()) {
@@ -599,34 +593,15 @@ public class Controller implements Initializable {
                 } else {
                     Alerts.showWarningAlert("Недопустимые данные брони!", "Количество гостей должно быть больше нуля", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showErrorAlert("", "Необходимо выбрать запись в таблице", "");
             }
         }
     }
 
-    //TAB APARTMENTS
-    public ViewingApartmentsPhotosDialog vapDialog;
-    public AddingNewNumberDialog annDialog;
-    public Tab apartmentsTab;
-    public TextField apartmentsNumberTF;
-    public ComboBox apartmentsTypeCB;
-    public TextField apartmentsPriceTF;
-    public Label discountCurrentValueL;
-    public TextField discountNewValueTF;
-    public TableView<Apartments> apartmentsTableView;
-    public TableColumn<Apartments, Integer> apartmentsIdColumn;
-    public TableColumn<Apartments, Integer> apartmentsNumberColumn;
-    public TableColumn<Apartments, String> apartmentsTypeColumn;
-    public TableColumn<Apartments, Integer> apartmentsPriceColumn;
-    private Integer idOfSelectedApartment;
-    private ObservableList<Apartments> apartmentsOList = FXCollections.observableArrayList();
-
     public void fillApartmentsTableView(ResultSet localResultSet) throws SQLException {
         apartmentsOList.clear();
-        while (localResultSet.next())
-        {
+        while (localResultSet.next()) {
             Apartments living = new Apartments(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
                     new SimpleIntegerProperty(localResultSet.getInt(2)),
@@ -639,7 +614,7 @@ public class Controller implements Initializable {
     }
 
     public void onSelectAllApartments(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             fillApartmentsTableView(RequestsSQL.selectAllFromApartments(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -662,9 +637,9 @@ public class Controller implements Initializable {
     }
 
     public void onChangeDiscount(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             RequestsSQL.setNewDiscount(connection, Integer.parseInt(discountNewValueTF.getText()));
-            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection).toString() + "%");
+            discountCurrentValueL.setText(RequestsSQL.getCurrentDiscount(connection) + "%");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -676,14 +651,13 @@ public class Controller implements Initializable {
     }
 
     public void onDeleteApartmentData(ActionEvent actionEvent) {
-        try(Connection connection = dH.getConnection()) {
-            if(RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+        try (Connection connection = dH.getConnection()) {
+            if (RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
                 RequestsSQL.deleteApartmentsEntry(
                         connection,
                         idOfSelectedApartment
                 );
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Недопустимые данные номера!", "Номер с таким численным обозначением уже существует", "");
             }
         } catch (SQLException throwables) {
@@ -692,12 +666,12 @@ public class Controller implements Initializable {
     }
 
     public void onChangeApartmentData(ActionEvent actionEvent) {
-        if(!apartmentsNumberTF.equals("") && apartmentsTypeCB != null && !apartmentsPriceTF.equals("")) {
-            if(InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText()) && InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText())) {
-                if(Integer.parseInt(apartmentsNumberTF.getText()) > 0 && Integer.parseInt(apartmentsNumberTF.getText()) > 0){
+        if (!apartmentsNumberTF.equals("") && apartmentsTypeCB != null && !apartmentsPriceTF.equals("")) {
+            if (InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText()) && InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText())) {
+                if (Integer.parseInt(apartmentsNumberTF.getText()) > 0 && Integer.parseInt(apartmentsNumberTF.getText()) > 0) {
                     //SQL-ВАЛИДАЦИЯ
-                    try(Connection connection = dH.getConnection()) {
-                        if(RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
+                    try (Connection connection = dH.getConnection()) {
+                        if (RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
                             RequestsSQL.changeApartmentsEntry(
                                     connection,
                                     idOfSelectedApartment,
@@ -705,33 +679,28 @@ public class Controller implements Initializable {
                                     apartmentsTypeCB.getValue().toString(),
                                     Integer.parseInt(apartmentsPriceTF.getText())
                             );
-                        }
-                        else {
+                        } else {
                             Alerts.showWarningAlert("Недопустимые данные номера!", "Номер с таким численным обозначением уже существует", "");
                         }
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
-                }
-                else {
+                } else {
                     Alerts.showWarningAlert("Недопустимые данные номера!", "Численное обозначение номера и стоимость проживания должны быть больше нуля", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Неверный формат данных!", "Данные номера имеют неверный формат", "");
             }
-        }
-        else {
+        } else {
             Alerts.showWarningAlert("Не все данные номера были указаны!", "Все данные номера обязательны к заполнению", "");
         }
     }
 
     public void onViewPhotosOfApartment(ActionEvent actionEvent) throws IOException {
-        if(idOfSelectedApartment != null) {
+        if (idOfSelectedApartment != null) {
             vapDialog = new ViewingApartmentsPhotosDialog(false, "Views/ViewingApartmentsPhotos.fxml", "", idOfSelectedApartment);
             vapDialog.showDefaultDialog();
-        }
-        else {
+        } else {
             Alerts.showWarningAlert("Внимание!", "Номер не выбран", "Необходимо выбрать номер для отображения его фотографий");
         }
     }

@@ -19,24 +19,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewingApartmentsPhotosController {
+    public ImageView vaPhotosImageView;
+    public Image displayedImage;
+    DbHandler dH = DbHandler.getDbHandler();
     private Stage dialogStage;
+    private Integer idOfSelectedApartment;
+    //    private List<Image> listOfImages;
+    private List<Photos> listOfPhotos;
+    private Photos currentPhoto;
+    private Integer indexOfCurrentImage = 0;
 
     public void setDialogStage(Stage dialogStage) {
         this.dialogStage = dialogStage;
     }
 
-    public ImageView vaPhotosImageView;
-    public Image displayedImage;
-    private Integer idOfSelectedApartment;
-//    private List<Image> listOfImages;
-    private List<Photos> listOfPhotos;
-    private Photos currentPhoto;
-    private Integer indexOfCurrentImage = 0;
-    DbHandler dH = DbHandler.getDbHandler();
-
     public Integer getIdOfSelectedApartment() {
         return idOfSelectedApartment;
     }
+
     public void setIdOfSelectedApartment(Integer idOfSelectedApartment) {
         this.idOfSelectedApartment = idOfSelectedApartment;
 
@@ -59,9 +59,9 @@ public class ViewingApartmentsPhotosController {
 
     public void onAddPicture(ActionEvent actionEvent) throws IOException {
         List<File> filesCheckList = ImagesHandler.openFileChooser(dialogStage);
-        if(filesCheckList != null) {
+        if (filesCheckList != null) {
             List<File> addableFiles = new ArrayList<File>(ImagesHandler.copyAbsoluteFilesToRelativeFiles(filesCheckList));
-            for(int i = 0; i < addableFiles.size(); i++) {
+            for (int i = 0; i < addableFiles.size(); i++) {
                 try (Connection connection = dH.getConnection()) {
                     RequestsSQL.insertPhotoEntry(connection, ImagesHandler.escapeBackSlashes(addableFiles.get(i).getPath()), idOfSelectedApartment);
                 } catch (SQLException throwables) {
@@ -73,9 +73,9 @@ public class ViewingApartmentsPhotosController {
     }
 
     public void onDeletePicture(ActionEvent actionEvent) {
-        if(listOfPhotos.size() > 0) {
+        if (listOfPhotos.size() > 0) {
             Boolean dialogResult = Alerts.showConfirmationAlert("Удаление", "Изображение будет удалено.", "");
-            if(dialogResult == true) {
+            if (dialogResult == true) {
                 try (Connection connection = dH.getConnection()) {
                     RequestsSQL.deletePhotoEntry(connection, listOfPhotos.get(indexOfCurrentImage).getPhoto_id());
                 } catch (SQLException throwables) {
@@ -88,7 +88,7 @@ public class ViewingApartmentsPhotosController {
     }
 
     public void onPreviousPicture(ActionEvent actionEvent) throws IOException {
-        if(listOfPhotos.size() > 0) {
+        if (listOfPhotos.size() > 0) {
             indexOfCurrentImage = indexOfCurrentImage - 1;
             if (indexOfCurrentImage >= 0) {
                 vaPhotosImageView.setImage(ImagesHandler.setImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
@@ -103,7 +103,7 @@ public class ViewingApartmentsPhotosController {
     }
 
     public void onNextPicture(ActionEvent actionEvent) throws IOException {
-        if(listOfPhotos.size() > 0) {
+        if (listOfPhotos.size() > 0) {
             indexOfCurrentImage = indexOfCurrentImage + 1;
             if (indexOfCurrentImage < listOfPhotos.size()) {
                 vaPhotosImageView.setImage(ImagesHandler.setImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
@@ -120,7 +120,7 @@ public class ViewingApartmentsPhotosController {
     public void resetTableViewImages() {
         try (Connection connection = dH.getConnection()) {
             listOfPhotos = new ArrayList<Photos>(RequestsSQL.collectImagesByApartmentId(connection, idOfSelectedApartment));
-            if(listOfPhotos.size() > 0) {
+            if (listOfPhotos.size() > 0) {
                 vaPhotosImageView.setImage(ImagesHandler.setImageByRelativePath(listOfPhotos.get(indexOfCurrentImage).getPath()));
             }
         } catch (SQLException | IOException throwables) {
@@ -138,7 +138,7 @@ public class ViewingApartmentsPhotosController {
             double ratioY = vaPhotosImageView.getFitHeight() / img.getHeight();
 
             double reducCoeff = 0;
-            if(ratioX >= ratioY) {
+            if (ratioX >= ratioY) {
                 reducCoeff = ratioY;
             } else {
                 reducCoeff = ratioX;

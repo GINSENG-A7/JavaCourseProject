@@ -5,16 +5,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import sample.Controllers.EditingAdditionalServicesController;
 import sample.Controllers.ViewingApartmentsPhotosController;
 import sample.Main;
 
 import java.io.IOException;
 
 public class ViewingApartmentsPhotosDialog {
-    private boolean dialogResultIsOK;
-    private String viewFileName;
-    private String windowTitle;
+    private final boolean dialogResultIsOK;
+    private final String viewFileName;
+    private final String windowTitle;
     private Integer apartmentId;
 
     public ViewingApartmentsPhotosDialog(boolean dialogResultIsOK, String viewFileName, String windowTitle, Integer apartmentId) {

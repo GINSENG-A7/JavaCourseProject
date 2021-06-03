@@ -18,7 +18,7 @@ public class ImagesHandler {
     public static Image setImageByRelativePath(String relativePath) throws IOException {
         File file = new File(relativePath);
         BufferedImage image = ImageIO.read(file);
-        Image resultImage = SwingFXUtils.toFXImage(image, null );
+        Image resultImage = SwingFXUtils.toFXImage(image, null);
         return resultImage;
     }
 
@@ -32,7 +32,7 @@ public class ImagesHandler {
 
     public static List<File> copyAbsoluteFilesToRelativeFiles(List<File> absoluteFiles) {
         List<File> relativeFiles = new ArrayList<File>();
-        for(int i = 0; i < absoluteFiles.size(); i++) {
+        for (int i = 0; i < absoluteFiles.size(); i++) {
             try {
                 Files.copy(absoluteFiles.get(i).toPath(), Path.of("./Photos/" + absoluteFiles.get(i).getName()));
             } catch (IOException e) {
@@ -43,12 +43,12 @@ public class ImagesHandler {
         return relativeFiles;
     }
 
-    public static List<Image> convertFilesToImages (List<File> files) throws IOException {
+    public static List<Image> convertFilesToImages(List<File> files) throws IOException {
         if (!files.isEmpty()) {
             List<Image> resultImages = new ArrayList<Image>();
-            for(int i = 0; i < files.size(); i++) {
+            for (int i = 0; i < files.size(); i++) {
                 BufferedImage image = ImageIO.read(files.get(i));
-                resultImages.add(SwingFXUtils.toFXImage(image, null ));
+                resultImages.add(SwingFXUtils.toFXImage(image, null));
             }
             return resultImages;
         }
@@ -56,10 +56,10 @@ public class ImagesHandler {
     }
 
     public static String escapeBackSlashes(String inputStr) { //Можно поменять на StringBuilder
-        char[]  inputStrAsChars = inputStr.toCharArray();
+        char[] inputStrAsChars = inputStr.toCharArray();
         String resultStr = "";
-        for(int i = 0; i < inputStrAsChars.length; i++) {
-            if(inputStrAsChars[i] == '\\') {
+        for (int i = 0; i < inputStrAsChars.length; i++) {
+            if (inputStrAsChars[i] == '\\') {
                 resultStr = resultStr + '\\';
             }
             resultStr = resultStr + inputStrAsChars[i];

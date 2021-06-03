@@ -7,25 +7,16 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Controllers.AddingNewClientController;
 import sample.Main;
-import sample.Models.Booking;
 import sample.Models.Client;
 
 import java.io.IOException;
 
 public class AddingNewClientDialog {
     private boolean dialogResultIsOK;
-    private String viewFileName;
-    private String windowTitle;
-    private Client client;
+    private final String viewFileName;
+    private final String windowTitle;
+    private final Client client;
     private Integer bookingId;
-
-    public boolean isDialogResultIsOK() {
-        return dialogResultIsOK;
-    }
-
-    public void setDialogResultIsOK(boolean dialogResultIsOK) {
-        this.dialogResultIsOK = dialogResultIsOK;
-    }
 
     public AddingNewClientDialog(boolean dialogResultIsOK, String viewFileName, String windowTitle, Client client) {
         this.dialogResultIsOK = dialogResultIsOK;
@@ -42,8 +33,15 @@ public class AddingNewClientDialog {
         this.bookingId = bookingId;
     }
 
-    public void showDefaultDialog() throws IOException
-    {
+    public boolean isDialogResultIsOK() {
+        return dialogResultIsOK;
+    }
+
+    public void setDialogResultIsOK(boolean dialogResultIsOK) {
+        this.dialogResultIsOK = dialogResultIsOK;
+    }
+
+    public void showDefaultDialog() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(Main.class.getResource(viewFileName));
         Parent page = loader.load(); // Тут вызывается initialize
@@ -57,10 +55,9 @@ public class AddingNewClientDialog {
         addingNewClientStage.setScene(scene);
         AddingNewClientController controller = loader.getController();
         controller.setDialogStage(addingNewClientStage);
-        if(this.bookingId == null) {
+        if (this.bookingId == null) {
             controller.setAddableClient(this.client);
-        }
-        else {
+        } else {
             controller.setAddableClientWithBooking(this.client, this.bookingId);
         }
         addingNewClientStage.showAndWait();

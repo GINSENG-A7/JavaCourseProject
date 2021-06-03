@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateHandler
-{
-    private static DateFormat formatMySQL = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+public class DateHandler {
+    private static final DateFormat formatMySQL = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     public static boolean isDate(String value) {
         return value.matches("(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\\d\\d");
     }
@@ -24,7 +24,7 @@ public class DateHandler
     }
 
     public static String convertDateToString(Date value) {
-         return formatMySQL.format(value);
+        return formatMySQL.format(value);
 /*
          String day = String.valueOf(value.getDay());
          String month = String.valueOf(value.getMonth());

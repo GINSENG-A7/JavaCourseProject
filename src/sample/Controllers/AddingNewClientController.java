@@ -9,9 +9,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import sample.*;
+import sample.Alerts;
+import sample.DbHandler;
+import sample.InputValidation;
 import sample.Models.Apartments;
 import sample.Models.Client;
+import sample.RequestsSQL;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -21,12 +24,6 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class AddingNewClientController {
-    private Stage dialogStage;
-
-    public void setDialogStage(Stage dialogStage) {
-        this.dialogStage = dialogStage;
-    }
-
     public TableView<Apartments> anCustomerTableView; //Взять поля из модели Apartments вместо Client
     public TableColumn<Apartments, Integer> anCustomerApartmentIdColumn;
     public TableColumn<Apartments, Integer> anCustomerApartmentNumberColumn;
@@ -50,15 +47,21 @@ public class AddingNewClientController {
     public ComboBox anCustomerApartmentTypeCB;
     public TextField anCustomerDiscountTF;
     public TextField anCustomerResultPriceTF;
+    DbHandler dH = DbHandler.getDbHandler();
+    private Stage dialogStage;
     private Client addableClient;
     private Apartments selectedApartment;
     private Integer relatedBookingId;
-    private ObservableList<Apartments> anApartmentsOList = FXCollections.observableArrayList();
-    DbHandler dH = DbHandler.getDbHandler();
+    private final ObservableList<Apartments> anApartmentsOList = FXCollections.observableArrayList();
+
+    public void setDialogStage(Stage dialogStage) {
+        this.dialogStage = dialogStage;
+    }
 
     public Client getAddableClient() {
         return addableClient;
     }
+
     public void setAddableClient(Client addableClient) { //Тут просто неимоверный костыль
         this.addableClient = addableClient;
         anCustomerPassportsSeriesTF.setText(String.valueOf(addableClient.getPassport_series()));
@@ -66,14 +69,14 @@ public class AddingNewClientController {
         anCustomerNameTF.setText(addableClient.getName());
         anCustomerSurnameTF.setText(addableClient.getSurname());
         anCustomerPatronymicTF.setText(addableClient.getPatronymic());
-        if(addableClient.getBirthday() == null) {
+        if (addableClient.getBirthday() == null) {
             anCustomerBirthdayDP.setValue(null);
-        }
-        else {
+        } else {
             anCustomerBirthdayDP.setValue(LocalDate.parse(addableClient.getBirthday()));
         }
         anCustomerTelephoneTF.setText(addableClient.getTelephone());
     }
+
     public void setAddableClientWithBooking(Client addableClient, Integer relatedBookingId) { //Тут тоже, даже похуже
         this.addableClient = addableClient;
         this.relatedBookingId = relatedBookingId;
@@ -82,15 +85,14 @@ public class AddingNewClientController {
         anCustomerNameTF.setText(addableClient.getName());
         anCustomerSurnameTF.setText(addableClient.getSurname());
         anCustomerPatronymicTF.setText(addableClient.getPatronymic());
-        if(addableClient.getBirthday() == null) {
+        if (addableClient.getBirthday() == null) {
             anCustomerBirthdayDP.setValue(null);
-        }
-        else {
+        } else {
             anCustomerBirthdayDP.setValue(LocalDate.parse(addableClient.getBirthday()));
         }
         anCustomerTelephoneTF.setText(addableClient.getTelephone());
 //        SelectRelatedDataFromBookingById
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             ResultSet rs1 = RequestsSQL.selectRelatedDataFromBookingById(connection, relatedBookingId);
             if (rs1.next()) {
                 anCustomerSettlingDP.setValue(LocalDate.parse(rs1.getString(1)));
@@ -99,7 +101,7 @@ public class AddingNewClientController {
                 anCustomerKidsTF.setText(rs1.getString(4));
                 Integer relatedApartmentId = rs1.getInt(5);
                 ResultSet rs2 = RequestsSQL.selectAllFromApartmentsWhereApartmentIdIsSet(connection, relatedApartmentId);
-                if(rs2.next()) {
+                if (rs2.next()) {
                     Apartments pastingApartments = new Apartments(
                             new SimpleIntegerProperty(rs2.getInt(1)),
                             new SimpleIntegerProperty(rs2.getInt(2)),
@@ -126,7 +128,7 @@ public class AddingNewClientController {
         anCustomerApartmentPriceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
         onSelectAllApartments();
 
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             anCustomerApartmentTypeCB.setItems(RequestsSQL.getTypesOfApartments(connection));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,8 +137,7 @@ public class AddingNewClientController {
 
     private void fillApartmentsTableView(ResultSet localResultSet) throws SQLException {
         anApartmentsOList.clear();
-        while (localResultSet.next())
-        {
+        while (localResultSet.next()) {
             Apartments apartments = new Apartments(
                     new SimpleIntegerProperty(localResultSet.getInt(1)),
                     new SimpleIntegerProperty(localResultSet.getInt(2)),
@@ -149,7 +150,7 @@ public class AddingNewClientController {
     }
 
     public void onSelectAllApartments() {
-        try(Connection connection = dH.getConnection()) {
+        try (Connection connection = dH.getConnection()) {
             fillApartmentsTableView(RequestsSQL.selectAllFromApartments(connection));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -157,7 +158,7 @@ public class AddingNewClientController {
     }
 
     public void onRegisterNewLiving(ActionEvent actionEvent) {
-        if(!anCustomerPassportsSeriesTF.getText().equals("") &&
+        if (!anCustomerPassportsSeriesTF.getText().equals("") &&
                 !anCustomerPassportNumberTF.getText().equals("") &&
                 !anCustomerNameTF.getText().equals("") &&
                 !anCustomerSurnameTF.getText().equals("") &&
@@ -165,7 +166,7 @@ public class AddingNewClientController {
                 anCustomerBirthdayDP.getValue() != null &&
                 !anCustomerTelephoneTF.getText().equals("")
         ) {
-            if(InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
+            if (InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
                     InputValidation.checkLenthOfPassportNumber(anCustomerPassportNumberTF.getText()) &&
                     InputValidation.isRowConsistsOfNumbers(anCustomerPassportNumberTF.getText()) &&
                     InputValidation.checkLenthOfPassportSeries(anCustomerPassportsSeriesTF.getText()) &&
@@ -175,23 +176,23 @@ public class AddingNewClientController {
                     InputValidation.isRowConsistsOfNumbers(anCustomerTelephoneTF.getText()) &&
                     anCustomerBirthdayDP.getValue().isBefore(LocalDate.now())
             ) {
-                if(InputValidation.isRowConsistsOfNumbers(anCustomerGuestsTF.getText()) &&
+                if (InputValidation.isRowConsistsOfNumbers(anCustomerGuestsTF.getText()) &&
                         InputValidation.isRowConsistsOfNumbers(anCustomerKidsTF.getText()) &&
                         anCustomerSettlingDP.getValue().isAfter(LocalDate.now()) &&
                         anCustomerEvictionDP.getValue().isAfter(LocalDate.now())
                 ) {
-                    if(Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
-                        if(Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
-                            if(selectedApartment != null) {
+                    if (Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
+                        if (Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
+                            if (selectedApartment != null) {
                                 // SQL-ВАЛИДАЦИЯ
-                                try(Connection connection = dH.getConnection()) {
+                                try (Connection connection = dH.getConnection()) {
                                     Boolean numberIsFreeForTheDate = RequestsSQL.isNumberFreeForSetDate(
                                             connection,
                                             Date.valueOf(anCustomerSettlingDP.getValue()),
                                             Date.valueOf(anCustomerEvictionDP.getValue()),
                                             selectedApartment.getApartment_id()
                                     );
-                                    if(numberIsFreeForTheDate == true) {
+                                    if (numberIsFreeForTheDate == true) {
                                         try {
                                             Integer clientIdByViewData = RequestsSQL.selectNthIdFromClientWherePassportDataDefinedToStringALTERNATIVE(
                                                     connection,
@@ -209,11 +210,10 @@ public class AddingNewClientController {
                                                         Integer.parseInt(anCustomerGuestsTF.getText()),
                                                         Integer.parseInt(anCustomerKidsTF.getText())
                                                 );
-                                                Alerts.showInformationAlert("Данные были успешно добавлены.","","");
-                                            }
-                                            else {
+                                                Alerts.showInformationAlert("Данные были успешно добавлены.", "", "");
+                                            } else {
                                                 Integer clientsActualBookingsAndLivings = RequestsSQL.valueOfClientLivingsAndBookingsForToday(connection, addableClient.getClient_id());
-                                                if(clientsActualBookingsAndLivings <= 5) {
+                                                if (clientsActualBookingsAndLivings <= 5) {
                                                     RequestsSQL.insertClientAndLivingAndAdditionalServicesEntry(
                                                             connection,
                                                             Integer.parseInt(anCustomerPassportsSeriesTF.getText()),
@@ -229,11 +229,10 @@ public class AddingNewClientController {
                                                             Integer.parseInt(anCustomerGuestsTF.getText()),
                                                             Integer.parseInt(anCustomerKidsTF.getText())
                                                     );
-                                                    Alerts.showInformationAlert("Данные были успешно добавлены.","","");
+                                                    Alerts.showInformationAlert("Данные были успешно добавлены.", "", "");
                                                 }
                                             }
-                                        }
-                                        catch (SQLException e) {
+                                        } catch (SQLException e) {
                                             e.printStackTrace();
                                         }
                                     } else {
@@ -242,35 +241,29 @@ public class AddingNewClientController {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                            }
-                            else {
+                            } else {
                                 Alerts.showWarningAlert("Номер не был выбран!", "Для создания брони необходимо выбрать номер из таблицы", "");
                             }
-                        }
-                        else {
+                        } else {
                             Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество детей не может быть больше количества взрослых", "");
                         }
-                    }
-                    else {
+                    } else {
                         Alerts.showWarningAlert("Недопустимые данные проживания!", "Количество гостей должно быть больше нуля", "");
                     }
-                }
-                else {
+                } else {
                     Alerts.showWarningAlert("Неверный формат данных!", "Данные бронирования имеют неверный формат", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
             }
-        }
-        else {
+        } else {
             Alerts.showWarningAlert("Не все данные клинта были указаны!", "Все данные клиента обязательны к заполнению", "");
         }
     }
 
     public void onCreateNewBooking(ActionEvent actionEvent) {
         // Тут поверх всего проверить текстовые поля на ""
-        if(!anCustomerPassportsSeriesTF.getText().equals("") &&
+        if (!anCustomerPassportsSeriesTF.getText().equals("") &&
                 !anCustomerPassportNumberTF.getText().equals("") &&
                 !anCustomerNameTF.getText().equals("") &&
                 !anCustomerSurnameTF.getText().equals("") &&
@@ -278,7 +271,7 @@ public class AddingNewClientController {
                 anCustomerBirthdayDP.getValue() != null &&
                 !anCustomerTelephoneTF.getText().equals("")
         ) {
-            if(InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
+            if (InputValidation.isRowConsistsOfNumbers(anCustomerPassportsSeriesTF.getText()) &&
                     InputValidation.checkLenthOfPassportNumber(anCustomerPassportNumberTF.getText()) &&
                     InputValidation.isRowConsistsOfNumbers(anCustomerPassportNumberTF.getText()) &&
                     InputValidation.checkLenthOfPassportSeries(anCustomerPassportsSeriesTF.getText()) &&
@@ -288,23 +281,23 @@ public class AddingNewClientController {
                     InputValidation.isRowConsistsOfNumbers(anCustomerTelephoneTF.getText()) &&
                     anCustomerBirthdayDP.getValue().isBefore(LocalDate.now())
             ) {
-                if(InputValidation.isRowConsistsOfNumbers(anCustomerGuestsTF.getText()) &&
+                if (InputValidation.isRowConsistsOfNumbers(anCustomerGuestsTF.getText()) &&
                         InputValidation.isRowConsistsOfNumbers(anCustomerKidsTF.getText()) &&
                         anCustomerSettlingDP.getValue().isAfter(LocalDate.now()) &&
                         anCustomerEvictionDP.getValue().isAfter(LocalDate.now())
                 ) {
-                    if(Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
-                        if(Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
-                            if(selectedApartment != null) {
+                    if (Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
+                        if (Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
+                            if (selectedApartment != null) {
                                 // SQL-ВАЛИДАЦИЯ
-                                try(Connection connection = dH.getConnection()) {
+                                try (Connection connection = dH.getConnection()) {
                                     Boolean numberIsFreeForTheDate = RequestsSQL.isNumberFreeForSetDate(
                                             connection,
                                             Date.valueOf(anCustomerSettlingDP.getValue()),
                                             Date.valueOf(anCustomerEvictionDP.getValue()),
                                             selectedApartment.getApartment_id()
                                     );
-                                    if(numberIsFreeForTheDate == true) {
+                                    if (numberIsFreeForTheDate == true) {
                                         try {
                                             Integer clientIdByViewData = RequestsSQL.selectNthIdFromClientWherePassportDataDefinedToStringALTERNATIVE(
                                                     connection,
@@ -323,10 +316,9 @@ public class AddingNewClientController {
                                                         Integer.parseInt(anCustomerKidsTF.getText())
 
                                                 );
-                                            }
-                                            else {
+                                            } else {
                                                 Integer clientsActualBookingsAndLivings = RequestsSQL.valueOfClientLivingsAndBookingsForToday(connection, addableClient.getClient_id());
-                                                if(clientsActualBookingsAndLivings <= 5) {
+                                                if (clientsActualBookingsAndLivings <= 5) {
                                                     RequestsSQL.insertClientAndBookingAndEntry(
                                                             connection,
                                                             Integer.parseInt(anCustomerPassportsSeriesTF.getText()),
@@ -344,8 +336,7 @@ public class AddingNewClientController {
                                                     );
                                                 }
                                             }
-                                        }
-                                        catch (SQLException e) {
+                                        } catch (SQLException e) {
                                             e.printStackTrace();
                                         }
                                     } else {
@@ -354,35 +345,29 @@ public class AddingNewClientController {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                            }
-                            else {
+                            } else {
                                 Alerts.showWarningAlert("Номер не был выбран!", "Для создания брони необходимо выбрать номер из таблицы", "");
                             }
-                        }
-                        else {
+                        } else {
                             Alerts.showWarningAlert("Недопустимые данные брони!", "Количество детей не может быть больше количества взрослых", "");
                         }
-                    }
-                    else {
+                    } else {
                         Alerts.showWarningAlert("Недопустимые данные брони!", "Количество гостей должно быть больше нуля", "");
                     }
-                }
-                else {
+                } else {
                     Alerts.showWarningAlert("Неверный формат данных!", "Данные бронирования имеют неверный формат", "");
                 }
-            }
-            else {
+            } else {
                 Alerts.showWarningAlert("Неверный формат данных!", "Данные клиента имеют неверный формат", "");
             }
-        }
-        else {
+        } else {
             Alerts.showWarningAlert("Не все данные клинта были указаны!", "Все данные клиента обязательны к заполнению", "");
         }
     }
 
     public void onApplyFilters(ActionEvent actionEvent) {
-        if(anCustomerApartmentTypeCB.getValue() != null) {
-            try(Connection connection = dH.getConnection()) {
+        if (anCustomerApartmentTypeCB.getValue() != null) {
+            try (Connection connection = dH.getConnection()) {
                 fillApartmentsTableView(
                         RequestsSQL.applyTargetFilters(
                                 connection,
@@ -396,9 +381,8 @@ public class AddingNewClientController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
-        else {
-            try(Connection connection = dH.getConnection()) {
+        } else {
+            try (Connection connection = dH.getConnection()) {
                 fillApartmentsTableView(
                         RequestsSQL.applyTargetFilters(
                                 connection,
@@ -428,19 +412,18 @@ public class AddingNewClientController {
     }
 
     public void countFinalPrice() {
-        if(!anCustomerGuestsTF.getText().equals("") && !anCustomerKidsTF.getText().equals("") && anCustomerSettlingDP.getValue().isBefore(anCustomerEvictionDP.getValue())) {
-            try (Connection connection = dH.getConnection()){
-               Integer discount = RequestsSQL.getCurrentDiscount(connection);
-               Integer guestsCount = Integer.parseInt(anCustomerGuestsTF.getText());
-               Integer kidsCount = Integer.parseInt(anCustomerKidsTF.getText());
-               Period period = Period.between(anCustomerSettlingDP.getValue(), anCustomerEvictionDP.getValue());
-               anCustomerDiscountTF.setText(String.valueOf(discount));
-               anCustomerResultPriceTF.setText(String.valueOf(period.getDays() * selectedApartment.getPrice() * guestsCount + (period.getDays() * kidsCount * (selectedApartment.getPrice() - (selectedApartment.getPrice() / 100 * discount)))));
+        if (!anCustomerGuestsTF.getText().equals("") && !anCustomerKidsTF.getText().equals("") && anCustomerSettlingDP.getValue().isBefore(anCustomerEvictionDP.getValue())) {
+            try (Connection connection = dH.getConnection()) {
+                Integer discount = RequestsSQL.getCurrentDiscount(connection);
+                Integer guestsCount = Integer.parseInt(anCustomerGuestsTF.getText());
+                Integer kidsCount = Integer.parseInt(anCustomerKidsTF.getText());
+                Period period = Period.between(anCustomerSettlingDP.getValue(), anCustomerEvictionDP.getValue());
+                anCustomerDiscountTF.setText(String.valueOf(discount));
+                anCustomerResultPriceTF.setText(String.valueOf(period.getDays() * selectedApartment.getPrice() * guestsCount + (period.getDays() * kidsCount * (selectedApartment.getPrice() - (selectedApartment.getPrice() / 100 * discount)))));
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-        }
-        else {
+        } else {
             anCustomerResultPriceTF.setText("<некорректные данные>");
         }
     }
