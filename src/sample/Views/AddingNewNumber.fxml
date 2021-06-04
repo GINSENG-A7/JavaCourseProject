@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="155.0" prefWidth="275.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.AddingNewNumberController">
+<AnchorPane prefHeight="155.0" prefWidth="275.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.AddingNewNumberController" stylesheets="/sample/Styles/style_0.css">
    <children>
       <Button layoutX="14.0" layoutY="116.0" mnemonicParsing="false" onAction="#onChoosePhotos" prefHeight="25.0" prefWidth="119.0" text="Выбрать фото" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
       <Button layoutX="142.0" layoutY="116.0" mnemonicParsing="false" onAction="#onRegisterNewNumber" prefHeight="25.0" prefWidth="119.0" text="ОК" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />

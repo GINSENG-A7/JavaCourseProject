@@ -74,7 +74,7 @@ public class InputValidation {
     public static void showAlert(String message) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Информация");
+        alert.setTitle("информация");
         alert.setHeaderText("Результат выполнения операции");
         alert.setContentText(message);
         alert.showAndWait();

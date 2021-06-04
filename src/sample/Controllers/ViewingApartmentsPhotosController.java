@@ -46,15 +46,6 @@ public class ViewingApartmentsPhotosController {
 
     @FXML
     void initialize() {
-
-//        File file = new File("./Photos/73553398.jpg");
-//        try {
-//            BufferedImage image = ImageIO.read(file);
-//            displayedImage = SwingFXUtils.toFXImage(image, null );
-//            vaPhotosImageView.setImage(displayedImage);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void onAddPicture(ActionEvent actionEvent) throws IOException {
@@ -74,7 +65,7 @@ public class ViewingApartmentsPhotosController {
 
     public void onDeletePicture(ActionEvent actionEvent) {
         if (listOfPhotos.size() > 0) {
-            Boolean dialogResult = Alerts.showConfirmationAlert("Удаление", "Изображение будет удалено.", "");
+            Boolean dialogResult = Alerts.showConfirmationAlert("Удаление", "изображение будет удалено.", "");
             if (dialogResult == true) {
                 try (Connection connection = dH.getConnection()) {
                     RequestsSQL.deletePhotoEntry(connection, listOfPhotos.get(indexOfCurrentImage).getPhoto_id());

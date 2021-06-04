@@ -53,7 +53,7 @@ public class AddingNewNumberController {
         if (!anNumberNumber.equals("") && anNumberApartmentType != null && !anNumberPrice.equals("")) {
             if (InputValidation.isRowConsistsOfNumbers(anNumberNumber.getText()) && InputValidation.isRowConsistsOfNumbers(anNumberPrice.getText())) {
                 if (Integer.parseInt(anNumberNumber.getText()) > 0 && Integer.parseInt(anNumberPrice.getText()) > 0) {
-                    // SQL-ВАЛИДАЦИЯ
+                    // SQL-Validation
                     try (Connection connection = dH.getConnection()) {
                         if (RequestsSQL.isNumberOfApartmentsUnique(connection, Integer.parseInt(anNumberNumber.getText()))) {
                             RequestsSQL.insertApartmentsEntry(

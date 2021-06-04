@@ -15,18 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class RequestsSQL {
-/*
-
-    public static void AddEntryInHuman(Connection conn, Human hmn) throws SQLException {
-        String query = "INSERT INTO institut.HUMANS (NAME, SURNAME, PATRONYMIC, GENDER, HEIGHT, WEIGHT, AGE, TELEPHONE) VALUES (\'" + hmn.getName() + "\', \'" + hmn.getSurname() + "\', \'" + hmn.getPatronymic() + "\', \'" + hmn.getGender() + "\', " + hmn.getHeight() + ", " + hmn.getWeight() + ", " + hmn.getAge() + ", \'" + hmn.getTelephone() + "\')";
-        conn.createStatement().executeUpdate(query);
-    }
-
-    public static void EditEntryInHumanWithId(Connection conn, Human hmn) throws SQLException {
-        String query = "UPDATE institut.HUMANS SET NAME = \'" + hmn.getName() + "\', SURNAME = \'" + hmn.getSurname() + "\', PATRONYMIC = \'" + hmn.getPatronymic() + "\', GENDER = \'" + hmn.getGender() + "\', HEIGHT = " + hmn.getHeight() + ", WEIGHT = " + hmn.getWeight() + ", AGE = " + hmn.getAge() + ", TELEPHONE = \'" + hmn.getTelephone() + "\' WHERE ID = " + hmn.getId();
-        conn.createStatement().executeUpdate(query);
-    }
-*/
 
     public static ResultSet applyTargetFilters(Connection conn, String type, Date b1, Date b2, int bp, int tp) throws SQLException //Зарефакторить SQL запросы в этом методе
     {

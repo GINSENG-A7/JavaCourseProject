@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="489.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.ViewingApartmentsPhotosController">
+<AnchorPane prefHeight="489.0" prefWidth="816.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.ViewingApartmentsPhotosController" stylesheets="/sample/Styles/style_0.css">
    <children>
       <Button layoutX="14.0" layoutY="450.0" mnemonicParsing="false" onAction="#onPreviousPicture" prefHeight="25.0" prefWidth="190.0" text="Предыдущая" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
       <Button layoutX="215.0" layoutY="450.0" mnemonicParsing="false" onAction="#onDeletePicture" prefHeight="25.0" prefWidth="190.0" text="Удалить" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="215.0" />

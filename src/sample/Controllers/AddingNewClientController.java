@@ -184,7 +184,7 @@ public class AddingNewClientController {
                     if (Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
                         if (Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
                             if (selectedApartment != null) {
-                                // SQL-ВАЛИДАЦИЯ
+                                // SQL-Validation
                                 try (Connection connection = dH.getConnection()) {
                                     Boolean numberIsFreeForTheDate = RequestsSQL.isNumberFreeForSetDate(
                                             connection,
@@ -289,7 +289,7 @@ public class AddingNewClientController {
                     if (Integer.parseInt(anCustomerGuestsTF.getText()) > 0) {
                         if (Integer.parseInt(anCustomerKidsTF.getText()) < Integer.parseInt(anCustomerGuestsTF.getText())) {
                             if (selectedApartment != null) {
-                                // SQL-ВАЛИДАЦИЯ
+                                // SQL-Validation
                                 try (Connection connection = dH.getConnection()) {
                                     Boolean numberIsFreeForTheDate = RequestsSQL.isNumberFreeForSetDate(
                                             connection,

@@ -669,7 +669,7 @@ public class Controller implements Initializable {
         if (!apartmentsNumberTF.equals("") && apartmentsTypeCB != null && !apartmentsPriceTF.equals("")) {
             if (InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText()) && InputValidation.isRowConsistsOfNumbers(apartmentsNumberTF.getText())) {
                 if (Integer.parseInt(apartmentsNumberTF.getText()) > 0 && Integer.parseInt(apartmentsNumberTF.getText()) > 0) {
-                    //SQL-ВАЛИДАЦИЯ
+                    //SQL-Validation
                     try (Connection connection = dH.getConnection()) {
                         if (RequestsSQL.isThereNoBookingsAndLivingsOnApartment(connection, idOfSelectedApartment) == true) {
                             RequestsSQL.changeApartmentsEntry(
